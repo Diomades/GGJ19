@@ -41,6 +41,9 @@ public class WorldMover : MonoBehaviour
         //Tell PeopleManager to start spawning
         peopleManager.StartGenerate(continents.GetComponent<BoxCollider2D>().bounds, continents, continents2);
 
+        //Store our initial reference to the current player position
+        connectionManager.currentPlayer = continents.transform.Find("Player").gameObject;
+
         _moving = true;
     }
 

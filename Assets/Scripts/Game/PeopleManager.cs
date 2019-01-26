@@ -7,6 +7,7 @@ public enum PersonType { Friend, Lover, Player };
 public class PeopleManager : MonoBehaviour
 {
     public ConnectionManager connectionManager;
+    public LineDraw lineDraw;
 
     public Sprite playerSprite;
     public Color playerColor;
@@ -22,8 +23,7 @@ public class PeopleManager : MonoBehaviour
     private GameObject _continents1Ref;
     private GameObject _continents2Ref;
 
-    private GameObject _player1;
-    private GameObject _player2;
+    Vector3 lineStartPos;
     private List<GameObject> _people1 = new List<GameObject>();
     private List<GameObject> _people2 = new List<GameObject>();
 
@@ -56,8 +56,9 @@ public class PeopleManager : MonoBehaviour
             case PersonType.Player:
                 person1Sprite.color = playerColor;
                 person1Sprite.sprite = playerSprite;
+                lineStartPos = person1.transform.position; //Store the position of Person 1 for distance measuring
                 //person1.GetComponent<LineRenderer>().enabled = false; //Disable the Line Renderer
-                _player1 = person1; //Set Player 1 up for reference later
+                //_player1 = person1; //Set Player 1 up for reference later
                 break;
             case PersonType.Friend:
                 person1Sprite.color = friendColor;
@@ -74,18 +75,23 @@ public class PeopleManager : MonoBehaviour
 
         //Finally, instantiate the person and create a second copy on the other map
         //We don't care about sending the correct playerPos, as this is just used to calculate distance and not stored
-        person1.GetComponent<PersonScript>().InstantiatePerson(_player1.transform.position, type, connectionManager);
+        person1.GetComponent<PersonScript>().InstantiatePerson(lineStartPos, type, connectionManager);
 
         GameObject person2 = Instantiate(person1, _continents2Ref.transform);
 
         if (type == PersonType.Player)
         {
             //Store a reference for the other map for line drawing purposes
-            _player2 = person2;
+            //_player2 = person2;
 
             //Name the player icons to be easily located later
-            _player1.name = "Player";
-            _player2.name = "Player";
+            //_player1.name = "Player";
+            //_player2.name = "Player";
+
+            person1.name = "Player";
+            person2.name = "Player";
+
+            lineDraw.StoreReferences(person1, person2);
         }
         else
         {
@@ -98,36 +104,8 @@ public class PeopleManager : MonoBehaviour
     //Repeated on update and accessed by another function. Simply delegates the DrawLine function twice as appropriate to both groups
     public void OrderDrawLines()
     {
-        DrawLines(_people1,true);
-        DrawLines(_people2, false);
-    }
-
-    //Cycles through and draws all the necessary lines per frame update for whatever lines need to be drawn
-    private void DrawLines(List<GameObject> people, bool people1)
-    {
-        GameObject refPlayer;
-        if (people1)
-        {
-            refPlayer = _player1;
-        }
-        else
-        {
-            refPlayer = _player2;
-        }
-
-        foreach(GameObject person in people)
-        {
-            LineRenderer lineRenderer = person.GetComponent<LineRenderer>();
-
-            //Only do an update if the line renderer is enabled
-            if (lineRenderer.enabled)
-            {
-                var points = new Vector3[2];
-                points[0] = person.transform.position;
-                points[1] = refPlayer.transform.position;
-                lineRenderer.SetPositions(points);
-            }
-        }        
+        lineDraw.DrawLines(_people1, true);
+        lineDraw.DrawLines(_people2, false);
     }
 
     private Vector3 SpawnPoint()

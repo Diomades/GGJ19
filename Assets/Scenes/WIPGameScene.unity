@@ -367,6 +367,7 @@ GameObject:
   - component: {fileID: 1689417830}
   - component: {fileID: 1689417831}
   - component: {fileID: 1689417832}
+  - component: {fileID: 1689417834}
   m_Layer: 0
   m_Name: GameScripts
   m_TagString: Untagged
@@ -406,8 +407,8 @@ MonoBehaviour:
   continents2: {fileID: 0}
   clouds: {fileID: 1819226237}
   clouds2: {fileID: 0}
-  continentMoveSpeed: 0.4
-  cloudMoveSpeed: 0.7
+  continentMoveSpeed: 0.6
+  cloudMoveSpeed: 1
 --- !u!114 &1689417831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,6 +422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectionManager: {fileID: 1689417832}
+  lineDraw: {fileID: 1689417834}
   playerSprite: {fileID: 21300000, guid: 4b3658198ef7cee4f884d2046a38dfa2, type: 3}
   playerColor: {r: 1, g: 0, b: 0, a: 1}
   friendSprite: {fileID: 21300000, guid: 0813597bc4eab184883bcc1cad14c6ac, type: 3}
@@ -446,6 +448,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   peopleManager: {fileID: 1689417831}
   worldMover: {fileID: 1689417830}
+  playerSelected: 0
   currentPlayer: {fileID: 0}
 --- !u!4 &1689417833
 Transform:
@@ -461,6 +464,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1689417834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689417828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff52177830084d4fb84a2bf6dbd881f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectionManager: {fileID: 1689417832}
 --- !u!1 &1819226237 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1166732623664118439, guid: 6669c7c37fdf14448beef8639d68f31c,
@@ -624,6 +640,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1166732623664118437, guid: 6669c7c37fdf14448beef8639d68f31c,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.8235294
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6669c7c37fdf14448beef8639d68f31c, type: 3}
