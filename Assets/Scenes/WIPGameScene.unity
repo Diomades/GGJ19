@@ -366,6 +366,7 @@ GameObject:
   - component: {fileID: 1689417829}
   - component: {fileID: 1689417830}
   - component: {fileID: 1689417831}
+  - component: {fileID: 1689417832}
   m_Layer: 0
   m_Name: GameScripts
   m_TagString: Untagged
@@ -399,6 +400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   peopleManager: {fileID: 1689417831}
+  connectionManager: {fileID: 1689417832}
   worldMap: {fileID: 6187086394598495437}
   continents: {fileID: 573728875}
   continents2: {fileID: 0}
@@ -418,6 +420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b7000ab46e0752499567c4b9a0d6062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  connectionManager: {fileID: 1689417832}
   playerSprite: {fileID: 21300000, guid: 4b3658198ef7cee4f884d2046a38dfa2, type: 3}
   playerColor: {r: 1, g: 0, b: 0, a: 1}
   friendSprite: {fileID: 21300000, guid: 0813597bc4eab184883bcc1cad14c6ac, type: 3}
@@ -429,6 +432,21 @@ MonoBehaviour:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   worldMapCollider: {fileID: 1137077394}
+--- !u!114 &1689417832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689417828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f9a54223c5b2a448cf0f7bcba2afe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  peopleManager: {fileID: 1689417831}
+  worldMover: {fileID: 1689417830}
+  currentPlayer: {fileID: 0}
 --- !u!4 &1689417833
 Transform:
   m_ObjectHideFlags: 0

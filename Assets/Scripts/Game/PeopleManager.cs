@@ -6,6 +6,8 @@ public enum PersonType { Friend, Lover, Player };
 
 public class PeopleManager : MonoBehaviour
 {
+    public ConnectionManager connectionManager;
+
     public Sprite playerSprite;
     public Color playerColor;
     public Sprite friendSprite;
@@ -24,8 +26,6 @@ public class PeopleManager : MonoBehaviour
     private GameObject _player2;
     private List<GameObject> _people1 = new List<GameObject>();
     private List<GameObject> _people2 = new List<GameObject>();
-
-    //Generate a random point, check it hits on the WorldMapCollider, place a person there
 
     public void StartGenerate(Bounds bounds, GameObject map1, GameObject map2)
     {
@@ -56,7 +56,7 @@ public class PeopleManager : MonoBehaviour
             case PersonType.Player:
                 person1Sprite.color = playerColor;
                 person1Sprite.sprite = playerSprite;
-                person1.GetComponent<LineRenderer>().enabled = false; //Disable the Line Renderer
+                //person1.GetComponent<LineRenderer>().enabled = false; //Disable the Line Renderer
                 _player1 = person1; //Set Player 1 up for reference later
                 break;
             case PersonType.Friend:
@@ -74,7 +74,7 @@ public class PeopleManager : MonoBehaviour
 
         //Finally, instantiate the person and create a second copy on the other map
         //We don't care about sending the correct playerPos, as this is just used to calculate distance and not stored
-        person1.GetComponent<PersonScript>().InstantiatePerson(_player1.transform.position, type);
+        person1.GetComponent<PersonScript>().InstantiatePerson(_player1.transform.position, type, connectionManager);
 
         GameObject person2 = Instantiate(person1, _continents2Ref.transform);
 
@@ -82,6 +82,10 @@ public class PeopleManager : MonoBehaviour
         {
             //Store a reference for the other map for line drawing purposes
             _player2 = person2;
+
+            //Name the player icons to be easily located later
+            _player1.name = "Player";
+            _player2.name = "Player";
         }
         else
         {
@@ -98,6 +102,7 @@ public class PeopleManager : MonoBehaviour
         DrawLines(_people2, false);
     }
 
+    //Cycles through and draws all the necessary lines per frame update for whatever lines need to be drawn
     private void DrawLines(List<GameObject> people, bool people1)
     {
         GameObject refPlayer;
@@ -113,10 +118,15 @@ public class PeopleManager : MonoBehaviour
         foreach(GameObject person in people)
         {
             LineRenderer lineRenderer = person.GetComponent<LineRenderer>();
-            var points = new Vector3[2];
-            points[0] = person.transform.position;
-            points[1] = refPlayer.transform.position;
-            lineRenderer.SetPositions(points);
+
+            //Only do an update if the line renderer is enabled
+            if (lineRenderer.enabled)
+            {
+                var points = new Vector3[2];
+                points[0] = person.transform.position;
+                points[1] = refPlayer.transform.position;
+                lineRenderer.SetPositions(points);
+            }
         }        
     }
 
@@ -152,8 +162,8 @@ public class PeopleManager : MonoBehaviour
     {
         while (true)
         {
-            //yield return new WaitForSeconds(Random.Range(3f, 6f));
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(Random.Range(3f, 6f));
+            //yield return new WaitForSeconds(1f);
 
             float friendOrLover = Random.Range(0f, 1f);
             if (friendOrLover <= 0.9f)

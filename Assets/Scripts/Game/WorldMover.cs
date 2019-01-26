@@ -5,6 +5,7 @@ using UnityEngine;
 public class WorldMover : MonoBehaviour
 {
     public PeopleManager peopleManager;
+    public ConnectionManager connectionManager;
 
     public GameObject worldMap;
 
@@ -59,13 +60,19 @@ public class WorldMover : MonoBehaviour
                 {
                     Debug.Log("Moving WorldMapBig");
                     _curContinent.transform.position = SpawnPosition(continents2.transform.position, _continentWidth);
+
+                    //Change the current continent and update the player that is our main
                     _curContinent = continents2;
+                    connectionManager.currentPlayer = continents2.transform.Find("Player").gameObject;
                 }
                 else
                 {
                     Debug.Log("Moving WorldMapBig(Clone)");
                     _curContinent.transform.position = SpawnPosition(continents.transform.position, _continentWidth);
+
+                    //Change the current continent and player that is our main
                     _curContinent = continents;
+                    connectionManager.currentPlayer = continents.transform.Find("Player").gameObject;
                 }
             }
 

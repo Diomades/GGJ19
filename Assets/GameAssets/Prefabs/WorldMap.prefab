@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 530564678239672871}
   - component: {fileID: 530564678239672868}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WorldMapCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,7 +312,7 @@ GameObject:
   - component: {fileID: 530564679855791834}
   - component: {fileID: 530564679855791833}
   - component: {fileID: 573728877}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WorldMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
