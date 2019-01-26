@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WorldMover : MonoBehaviour
 {
+    public PeopleManager peopleManager;
+
     public GameObject worldMap;
 
     public GameObject continents;
@@ -34,6 +36,9 @@ public class WorldMover : MonoBehaviour
         //Instantiate new continents and clouds at the appropriate positions and add them to the list
         InstantiateContinent2();
         InstantiateClouds2();
+
+        //Tell PeopleManager to start spawning
+        peopleManager.StartGenerate(continents.GetComponent<BoxCollider2D>().bounds, continents, continents2);
 
         _moving = true;
     }
@@ -79,6 +84,8 @@ public class WorldMover : MonoBehaviour
                     _curClouds = clouds;
                 }
             }
+
+            peopleManager.OrderDrawLines(); //Update any drawn lines
         }
     }
 
