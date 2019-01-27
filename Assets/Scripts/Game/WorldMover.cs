@@ -90,6 +90,14 @@ public class WorldMover : MonoBehaviour
 
                     //Change the current continent and update the player that is our main
                     _curContinent = continents2;
+                    
+                    //If the player is selected, deactivate the current line
+                    if (connectionManager.playerSelected)
+                    {
+                        connectionManager.currentPlayer.GetComponent<LineRenderer>().enabled = false;
+                    }
+
+                    //Set the new currentPlayer
                     connectionManager.currentPlayer = continents2.transform.Find("Player").gameObject;
                 }
                 else
@@ -99,6 +107,13 @@ public class WorldMover : MonoBehaviour
 
                     //Change the current continent and player that is our main
                     _curContinent = continents;
+
+                    //If the player is selected, deactivate the current line
+                    if (connectionManager.playerSelected)
+                    {
+                        connectionManager.currentPlayer.GetComponent<LineRenderer>().enabled = false;
+                    }
+
                     connectionManager.currentPlayer = continents.transform.Find("Player").gameObject;
                 }
             }

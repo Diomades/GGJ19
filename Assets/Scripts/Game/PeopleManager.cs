@@ -8,6 +8,7 @@ public class PeopleManager : MonoBehaviour
 {
     public ConnectionManager connectionManager;
     public LineDraw lineDraw;
+    public GameEvents gameEvents;
 
     public float updateRate;
 
@@ -59,6 +60,23 @@ public class PeopleManager : MonoBehaviour
 
             if (_person1.queueKill)
             {
+                //Check if we had a connection to this person
+                if (_people1[i].GetComponent<LineRenderer>().enabled)
+                {
+                    //Reduce total links as we just lost one
+                    connectionManager.totalLinks--;
+
+                    //Check if there's any event to display appropriate text for
+                    if(_person1.thisPersonType == PersonType.Friend)
+                    {
+                        gameEvents.CheckRunEvent(GameEvent.FriendshipLoss);
+                    }
+                    else if(_person1.thisPersonType == PersonType.Lover)
+                    {
+                        gameEvents.CheckRunEvent(GameEvent.LoveLoss);
+                    }
+                }
+
                 //Remove the line renderer
                 _people1[i].GetComponent<LineRenderer>().enabled = false;
                 _people2[i].GetComponent<LineRenderer>().enabled = false;
@@ -101,15 +119,15 @@ public class PeopleManager : MonoBehaviour
                 break;
         }
 
-        //Finally, instantiate the person and create a second copy on the other map
+        GameObject person2 = Instantiate(person1, _continents2Ref.transform);
+
+        //Finally, instantiate the person after create a second copy on the other map
         //We don't care about sending the correct playerPos, as this is just used to calculate distance and not stored
         person1.GetComponent<PersonScript>().InstantiatePerson(lineStartPos, type, connectionManager, lineColor, flashColor);
-
-        GameObject person2 = Instantiate(person1, _continents2Ref.transform);
+        person2.GetComponent<PersonScript>().InstantiatePerson(lineStartPos, type, connectionManager, lineColor, flashColor);
 
         if (type == PersonType.Player)
         {
-
             person1.name = "Player";
             person2.name = "Player";
 
@@ -148,14 +166,14 @@ public class PeopleManager : MonoBehaviour
         }
         while (!worldMapCollider.OverlapPoint(new Vector2(spawnX, spawnY)) && attempt <= 100);
 
-        if(attempt == 100)
+        /*if(attempt == 100)
         {
             Debug.Log("Failed to spawn!");
         }
         else
         {
             Debug.Log("Spawned at " + spawnX + " " + spawnY + " after " + attempt + " attempts.");
-        }
+        }*/
 
         return new Vector3(spawnX, spawnY, 1.5f); //Spawn a character between the Cloud and World layers if successful
     }

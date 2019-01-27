@@ -11,7 +11,7 @@ public class PersonScript : MonoBehaviour
     private float _strength; //The strength of the persons relationship to the player, between 0 and 1
     private float _fadeSpeed; //The speed at which strength wanes, between 0 and 1 / UpdateSpeed
     private float _friendship; //A modifier to FadeSpeed that says we're friends
-    private PersonType _thisPerson; //The type of person this is
+    public PersonType thisPersonType; //The type of person this is
 
     private PersonScript _sister; //The other version of this person elsewhere
 
@@ -24,8 +24,9 @@ public class PersonScript : MonoBehaviour
 
     public void InstantiatePerson(Vector3 playerPos, PersonType type, ConnectionManager man, Color lineColor, Color flashColor)
     {
-        _thisPerson = type; //Save our type for later use
+        thisPersonType = type; //Save our type for later use
         _connectionManager = man; //Store a reference to the People Manager
+        Debug.Log("Created person with " + _connectionManager);
 
         //If it's not a player, get a distance, calculate strength and fade speed
         if (type != PersonType.Player)
@@ -91,10 +92,10 @@ public class PersonScript : MonoBehaviour
     }
 
     //On click, pass details to the Connection Manager and let it handle them
-    void OnMouseUpAsButton()
+    void OnMouseDown()
     {
-        //Debug.Log(_thisPerson + " was clicked " + _connectionManager);
-        _connectionManager.personClicked(_thisPerson, this);
+        Debug.Log(thisPersonType + " was clicked, sending " + this + " to " + _connectionManager);
+        _connectionManager.PersonClicked(thisPersonType, this);
     }
 
     public void MakeConnection()
