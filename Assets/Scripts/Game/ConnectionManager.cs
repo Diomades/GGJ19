@@ -21,7 +21,11 @@ public class ConnectionManager : MonoBehaviour
             //If the player was selected first, make the connection and deselect the player
             if (playerSelected)
             {
+                //Make a connection for this person, and update their sister person as well
                 clicked.MakeConnection();
+                clicked.ConnectSister();
+
+                //Disable the line renderer going to the mouse pointer
                 currentPlayer.GetComponent<LineRenderer>().enabled = false; //Disable the line renderer
                 playerSelected = false;
             }

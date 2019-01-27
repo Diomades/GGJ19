@@ -44,7 +44,31 @@ public class WorldMover : MonoBehaviour
         //Store our initial reference to the current player position
         connectionManager.currentPlayer = continents.transform.Find("Player").gameObject;
 
+        //Move the camera appropriately to the player spawn point
+        MoveStartCamera(connectionManager.currentPlayer);
+
         _moving = true;
+    }
+
+    public void MoveStartCamera(GameObject player)
+    {
+        //BoxCollider2D curCollider = continents.transform.GetComponent<BoxCollider2D>();        
+        float centerDistance = player.transform.position.x - Camera.main.transform.position.x;
+
+        Debug.Log(centerDistance);
+        if (centerDistance < 0)
+        {
+            centerDistance = centerDistance * -1;
+
+            Vector3 newPos = continents.transform.position;
+            newPos.x += centerDistance;
+            continents.transform.position = newPos;
+
+            //Repeat the same steps for the other map
+            newPos = continents2.transform.position;
+            newPos.x += centerDistance;
+            continents2.transform.position = newPos;
+        }
     }
 
     private void Update()

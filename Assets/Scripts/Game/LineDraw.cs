@@ -9,10 +9,14 @@ public class LineDraw : MonoBehaviour
     private GameObject _player1;
     private GameObject _player2;
 
+    public bool currentlyPlaying = false;
+
     public void StoreReferences(GameObject p1, GameObject p2)
     {
         _player1 = p1;
         _player2 = p2;
+
+        currentlyPlaying = true;
     }
 
     //Cycles through and draws all the necessary lines per frame update for whatever lines need to be drawn

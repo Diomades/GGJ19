@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Screen { LogoScreen, MenuScreen, GameScreen, PauseScreen };
+public enum GameScreens { LogoScreen, MenuScreen, GameScreen, PauseScreen };
 
 //ScreenManager manages all tasks to swapping between specific screens
 public class ScreenManager : MonoBehaviour
@@ -19,7 +19,7 @@ public class ScreenManager : MonoBehaviour
 
     //Storing references to the current screen
     private GameObject _curScreenObject;
-    private Screen _curScreen;
+    private GameScreens _curScreen;
 
     public void StartScreenManager(GameManager man)
     {
@@ -35,7 +35,7 @@ public class ScreenManager : MonoBehaviour
         ActivateSingleScreen();
     }
 
-    public void ChangeCurrentScreen(Screen target)
+    public void ChangeCurrentScreen(GameScreens target)
     {
         //Store a reference to our current screen
         _curScreen = target;
@@ -43,16 +43,16 @@ public class ScreenManager : MonoBehaviour
         //Store a reference to our current screen game object
         switch (target)
         {
-            case Screen.GameScreen:
+            case GameScreens.GameScreen:
                 _curScreenObject = gameScreen;
                 break;
-            case Screen.LogoScreen:
+            case GameScreens.LogoScreen:
                 _curScreenObject = logoScreen;
                 break;
-            case Screen.MenuScreen:
+            case GameScreens.MenuScreen:
                 _curScreenObject = menuScreen;
                 break;
-            case Screen.PauseScreen:
+            case GameScreens.PauseScreen:
                 _curScreenObject = pauseScreen;
                 break;
         }

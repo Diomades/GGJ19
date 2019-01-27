@@ -9,12 +9,17 @@ public class PeopleManager : MonoBehaviour
     public ConnectionManager connectionManager;
     public LineDraw lineDraw;
 
+    public float updateRate;
+
     public Sprite playerSprite;
     public Color playerColor;
     public Sprite friendSprite;
     public Color friendColor;
     public Sprite loverSprite;
     public Color loverColor;
+
+    public Color lineColor; //Not used right now
+    public Color flashColor; //Not used right now
 
     public GameObject person;
     public Bounds worldMapBounds;
@@ -41,6 +46,34 @@ public class PeopleManager : MonoBehaviour
         StartCoroutine(SpawnTimer());
     }
 
+    //Update all of the spawned people at a certain rate
+    private void Update()
+    {
+        for(int i = 0; i < _people1.Count; i++)
+        {
+            PersonScript _person1 = _people1[i].GetComponent<PersonScript>();
+            PersonScript _person2 = _people2[i].GetComponent<PersonScript>();
+
+            _person1.UpdateStrength(updateRate);
+            _person2.UpdateStrength(updateRate);
+
+            if (_person1.queueKill)
+            {
+                //Remove the line renderer
+                _people1[i].GetComponent<LineRenderer>().enabled = false;
+                _people2[i].GetComponent<LineRenderer>().enabled = false;
+
+                //Destroy the person and remove them from the lists
+                Destroy(_person1);
+                Destroy(_person2);
+                _people1.RemoveAt(i);
+                _people2.RemoveAt(i);
+
+                i--; //Go back one to account for the removal
+            }
+        }
+    }
+
     //Because we always have 2 maps, we always need to generate 2 versions of each character and asset that moves with the map.
     private void CreateTwo(PersonType type)
     {
@@ -57,8 +90,6 @@ public class PeopleManager : MonoBehaviour
                 person1Sprite.color = playerColor;
                 person1Sprite.sprite = playerSprite;
                 lineStartPos = person1.transform.position; //Store the position of Person 1 for distance measuring
-                //person1.GetComponent<LineRenderer>().enabled = false; //Disable the Line Renderer
-                //_player1 = person1; //Set Player 1 up for reference later
                 break;
             case PersonType.Friend:
                 person1Sprite.color = friendColor;
@@ -70,23 +101,14 @@ public class PeopleManager : MonoBehaviour
                 break;
         }
 
-        //Get a distance between the player and the person.
-
-
         //Finally, instantiate the person and create a second copy on the other map
         //We don't care about sending the correct playerPos, as this is just used to calculate distance and not stored
-        person1.GetComponent<PersonScript>().InstantiatePerson(lineStartPos, type, connectionManager);
+        person1.GetComponent<PersonScript>().InstantiatePerson(lineStartPos, type, connectionManager, lineColor, flashColor);
 
         GameObject person2 = Instantiate(person1, _continents2Ref.transform);
 
         if (type == PersonType.Player)
         {
-            //Store a reference for the other map for line drawing purposes
-            //_player2 = person2;
-
-            //Name the player icons to be easily located later
-            //_player1.name = "Player";
-            //_player2.name = "Player";
 
             person1.name = "Player";
             person2.name = "Player";
@@ -98,6 +120,10 @@ public class PeopleManager : MonoBehaviour
             //Add these to an appropriate list
             _people1.Add(person1);
             _people2.Add(person2);
+
+            //Store references in both the people to their sister version
+            person1.GetComponent<PersonScript>().StoreSisterPerson(person2.GetComponent<PersonScript>());
+            person2.GetComponent<PersonScript>().StoreSisterPerson(person1.GetComponent<PersonScript>());
         }
     }
 
@@ -141,7 +167,6 @@ public class PeopleManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(Random.Range(3f, 6f));
-            //yield return new WaitForSeconds(1f);
 
             float friendOrLover = Random.Range(0f, 1f);
             if (friendOrLover <= 0.9f)

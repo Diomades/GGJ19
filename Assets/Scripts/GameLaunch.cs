@@ -24,7 +24,7 @@ public class GameLaunch : MonoBehaviour
         blackScreen.SetActive(true);
 
         //Disable all screens not relevant during start up
-        _gameManager.screenManager.ChangeCurrentScreen(Screen.LogoScreen);
+        _gameManager.screenManager.ChangeCurrentScreen(GameScreens.LogoScreen);
 
         //Start the sequence
         StartCoroutine(OpeningSequence());
@@ -50,7 +50,7 @@ public class GameLaunch : MonoBehaviour
         yield return new WaitForSeconds(_fadeTime);
         
         //Display the Menu Screen and start fading out to the menu
-        _gameManager.screenManager.ChangeCurrentScreen(Screen.MenuScreen);
+        _gameManager.screenManager.ChangeCurrentScreen(GameScreens.MenuScreen);
         _gameManager.fadeInOut.FadeScreen(true);
     }
 
@@ -61,7 +61,7 @@ public class GameLaunch : MonoBehaviour
         _gameManager.fadeInOut.FadeScreen(false);
         yield return new WaitForSeconds(_fadeTime);
         //Activate the game and fade to it
-        _gameManager.screenManager.ChangeCurrentScreen(Screen.GameScreen);
+        _gameManager.screenManager.ChangeCurrentScreen(GameScreens.GameScreen);
         _gameManager.fadeInOut.FadeScreen(true);
     }
 }
