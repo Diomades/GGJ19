@@ -23,7 +23,8 @@ public class PeopleManager : MonoBehaviour
     public Color flashColor; //Not used right now
 
     public GameObject person;
-    public Bounds worldMapBounds;
+    public Transform worldMapPositioner;
+    public Collider2D worldMapBounds;
     public PolygonCollider2D worldMapCollider;
 
     private GameObject _continents1Ref;
@@ -33,10 +34,9 @@ public class PeopleManager : MonoBehaviour
     private List<GameObject> _people1 = new List<GameObject>();
     private List<GameObject> _people2 = new List<GameObject>();
 
-    public void StartGenerate(Bounds bounds, GameObject map1, GameObject map2)
+    public void StartGenerate(GameObject map1, GameObject map2)
     {
         //Store references
-        worldMapBounds = bounds;
         _continents1Ref = map1;
         _continents2Ref = map2;
 
@@ -95,8 +95,8 @@ public class PeopleManager : MonoBehaviour
     //Because we always have 2 maps, we always need to generate 2 versions of each character and asset that moves with the map.
     private void CreateTwo(PersonType type)
     {
-        //Do one object and then instantiate the same object on the other map
-        GameObject person1 = Instantiate(person, _continents1Ref.transform);
+        //Do one object and instantiate it upon the worldMapPositioner to get its position correct, then we'll relocate it to the appropriate map
+        GameObject person1 = Instantiate(person, worldMapPositioner);
         SpriteRenderer person1Sprite = person1.GetComponent<SpriteRenderer>();
 
         person1.transform.position = SpawnPoint();
@@ -119,7 +119,11 @@ public class PeopleManager : MonoBehaviour
                 break;
         }
 
-        GameObject person2 = Instantiate(person1, _continents2Ref.transform);
+        GameObject person2 = Instantiate(person1, worldMapPositioner);
+
+        //Relocate Person1 and Person2 to their respective maps
+        person1.transform.parent = _continents1Ref.transform;
+        person2.transform.parent = _continents2Ref.transform;
 
         //Finally, instantiate the person after create a second copy on the other map
         //We don't care about sending the correct playerPos, as this is just used to calculate distance and not stored
@@ -160,20 +164,20 @@ public class PeopleManager : MonoBehaviour
 
         do
         {
-            spawnX = Random.Range(worldMapBounds.min.x, worldMapBounds.max.x);
-            spawnY = Random.Range(worldMapBounds.min.y, worldMapBounds.max.y);
+            spawnX = Random.Range(worldMapBounds.bounds.min.x, worldMapBounds.bounds.max.x);
+            spawnY = Random.Range(worldMapBounds.bounds.min.y, worldMapBounds.bounds.max.y);
             attempt++;
         }
         while (!worldMapCollider.OverlapPoint(new Vector2(spawnX, spawnY)) && attempt <= 100);
 
-        /*if(attempt == 100)
+        if(attempt >= 100)
         {
             Debug.Log("Failed to spawn!");
         }
         else
         {
-            Debug.Log("Spawned at " + spawnX + " " + spawnY + " after " + attempt + " attempts.");
-        }*/
+            Debug.Log("Spawned at " + spawnX + " " + spawnY + " after " + attempt + " attempts. Does it overlap? Unity thinks " + worldMapCollider.OverlapPoint(new Vector2(spawnX, spawnY)));
+        }
 
         return new Vector3(spawnX, spawnY, 1.5f); //Spawn a character between the Cloud and World layers if successful
     }
