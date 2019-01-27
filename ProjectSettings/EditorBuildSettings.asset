@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/WIPGameScene.unity
+    guid: 09f27aaf81863ca4cbfb0ac1f56d6f8a
   m_configObjects: {}
