@@ -9,6 +9,7 @@ public class GameEvents : MonoBehaviour
 {
     public Text sideBar;
 
+    private int _audioPhase = 0;
     public AudioClip atmosHigh;
     public AudioClip bassLaser;
     public AudioClip bassSpoopy;
@@ -77,6 +78,21 @@ public class GameEvents : MonoBehaviour
                     _peakDone = true;
                 }
                 return;
+        }
+    }
+
+    public void SetUpAudio()
+    {
+        Camera.main.GetComponent<AudioSource>();
+    }
+
+    //NOT USED YET
+    public void RampAudio()
+    {
+        _audioPhase++;
+        if(_audioPhase == 1)
+        {
+
         }
     }
 }

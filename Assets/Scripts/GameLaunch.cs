@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameLaunch : MonoBehaviour
 {
     public WorldMover worldMover;
+    public GameEvents gameEvents;
     private GameManager _gameManager;
 
     public GameObject splashScreen;

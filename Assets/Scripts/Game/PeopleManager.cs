@@ -201,7 +201,7 @@ public class PeopleManager : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(3f, 6f));
 
             float friendOrLover = Random.Range(0f, 1f);
-            if (friendOrLover <= 0.9f)
+            if (friendOrLover <= 0.96f)
             {
                 CreateTwo(PersonType.Friend);
             }
