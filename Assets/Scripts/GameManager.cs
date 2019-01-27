@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     public ScreenManager screenManager;
     public FadeInOut fadeInOut;
 
+    public bool gamePlaying = false;
+
     //This is the only script that should start anything
     void Start()
     {
@@ -24,5 +26,6 @@ public class GameManager : MonoBehaviour
 
         //This launches with a fade
         gameLaunch.StartGame();
+        gamePlaying = true;
     }
 }

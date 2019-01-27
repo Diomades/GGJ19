@@ -4,6 +4,7 @@ using UnityEngine;
 //GameLaunch manages the sequence of events as the game first boots
 public class GameLaunch : MonoBehaviour
 {
+    public WorldMover worldMover;
     private GameManager _gameManager;
 
     public GameObject splashScreen;
@@ -62,6 +63,7 @@ public class GameLaunch : MonoBehaviour
         yield return new WaitForSeconds(_fadeTime);
         //Activate the game and fade to it
         _gameManager.screenManager.ChangeCurrentScreen(GameScreens.GameScreen);
+        worldMover.StartMoving();
         _gameManager.fadeInOut.FadeScreen(true);
     }
 }

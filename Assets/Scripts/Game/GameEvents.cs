@@ -9,6 +9,13 @@ public class GameEvents : MonoBehaviour
 {
     public Text sideBar;
 
+    public AudioClip atmosHigh;
+    public AudioClip bassLaser;
+    public AudioClip bassSpoopy;
+    public AudioClip melodyBells;
+    public AudioClip melodyChimes;
+    public AudioClip melodyPiano;
+
     [TextArea(8,15)]
     public string connectionEvent;
     private bool _connectionDone = false;
@@ -38,35 +45,35 @@ public class GameEvents : MonoBehaviour
                 if (!_connectionDone)
                 {
                     Debug.Log("Connection made!");
-                    sideBar.text += "\n\n" + connectionEvent;
+                    sideBar.text = connectionEvent;
                     _connectionDone = true;
                 }
                 return;
             case GameEvent.Love:
                 if (!_loveDone)
                 {
-                    sideBar.text += "\n\n" + loveEvent;
+                    sideBar.text = loveEvent;
                     _loveDone = true;
                 }
                 return;
             case GameEvent.FriendshipLoss:
                 if (!_friendshipDone)
                 {
-                    sideBar.text += "\n\n" + friendshipLossEvent;
+                    sideBar.text = friendshipLossEvent;
                     _friendshipDone = true;
                 }
                 return;
             case GameEvent.LoveLoss:
                 if (!_loveLossDone)
                 {
-                    sideBar.text += "\n\n" + loveLossEvent;
+                    sideBar.text = loveLossEvent;
                     _loveLossDone = true;
                 }
                 return;
             case GameEvent.Peak:
                 if (!_peakDone)
                 {
-                    sideBar.text += "\n\n" + peakEvent;
+                    sideBar.text = peakEvent;
                     _peakDone = true;
                 }
                 return;

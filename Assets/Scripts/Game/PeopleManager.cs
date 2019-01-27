@@ -6,6 +6,7 @@ public enum PersonType { Friend, Lover, Player };
 
 public class PeopleManager : MonoBehaviour
 {
+    public GameManager gameManager;
     public ConnectionManager connectionManager;
     public LineDraw lineDraw;
     public GameEvents gameEvents;
@@ -36,9 +37,7 @@ public class PeopleManager : MonoBehaviour
 
     public void StartGenerate(GameObject map1, GameObject map2)
     {
-        //Store references
-        _continents1Ref = map1;
-        _continents2Ref = map2;
+        UpdateMapReferences(map1, map2);
 
         //Spawn the player twice - once for each map
         CreateTwo(PersonType.Player);
@@ -47,47 +46,57 @@ public class PeopleManager : MonoBehaviour
         StartCoroutine(SpawnTimer());
     }
 
+    public void UpdateMapReferences(GameObject map1, GameObject map2)
+    {
+        //Store references
+        _continents1Ref = map1;
+        _continents2Ref = map2;
+    }
+
     //Update all of the spawned people at a certain rate
     private void Update()
     {
-        for(int i = 0; i < _people1.Count; i++)
+        if (gameManager.gamePlaying)
         {
-            PersonScript _person1 = _people1[i].GetComponent<PersonScript>();
-            PersonScript _person2 = _people2[i].GetComponent<PersonScript>();
-
-            _person1.UpdateStrength(updateRate);
-            _person2.UpdateStrength(updateRate);
-
-            if (_person1.queueKill)
+            for (int i = 0; i < _people1.Count; i++)
             {
-                //Check if we had a connection to this person
-                if (_people1[i].GetComponent<LineRenderer>().enabled)
+                PersonScript _person1 = _people1[i].GetComponent<PersonScript>();
+                PersonScript _person2 = _people2[i].GetComponent<PersonScript>();
+
+                _person1.UpdateStrength(updateRate);
+                _person2.UpdateStrength(updateRate);
+
+                if (_person1.queueKill)
                 {
-                    //Reduce total links as we just lost one
-                    connectionManager.totalLinks--;
+                    //Check if we had a connection to this person
+                    if (_people1[i].GetComponent<LineRenderer>().enabled)
+                    {
+                        //Reduce total links as we just lost one
+                        connectionManager.totalLinks--;
 
-                    //Check if there's any event to display appropriate text for
-                    if(_person1.thisPersonType == PersonType.Friend)
-                    {
-                        gameEvents.CheckRunEvent(GameEvent.FriendshipLoss);
+                        //Check if there's any event to display appropriate text for
+                        if (_person1.thisPersonType == PersonType.Friend)
+                        {
+                            gameEvents.CheckRunEvent(GameEvent.FriendshipLoss);
+                        }
+                        else if (_person1.thisPersonType == PersonType.Lover)
+                        {
+                            gameEvents.CheckRunEvent(GameEvent.LoveLoss);
+                        }
                     }
-                    else if(_person1.thisPersonType == PersonType.Lover)
-                    {
-                        gameEvents.CheckRunEvent(GameEvent.LoveLoss);
-                    }
+
+                    //Remove the line renderer
+                    _people1[i].GetComponent<LineRenderer>().enabled = false;
+                    _people2[i].GetComponent<LineRenderer>().enabled = false;
+
+                    //Destroy the person and remove them from the lists
+                    Destroy(_person1);
+                    Destroy(_person2);
+                    _people1.RemoveAt(i);
+                    _people2.RemoveAt(i);
+
+                    i--; //Go back one to account for the removal
                 }
-
-                //Remove the line renderer
-                _people1[i].GetComponent<LineRenderer>().enabled = false;
-                _people2[i].GetComponent<LineRenderer>().enabled = false;
-
-                //Destroy the person and remove them from the lists
-                Destroy(_person1);
-                Destroy(_person2);
-                _people1.RemoveAt(i);
-                _people2.RemoveAt(i);
-
-                i--; //Go back one to account for the removal
             }
         }
     }
@@ -96,10 +105,10 @@ public class PeopleManager : MonoBehaviour
     private void CreateTwo(PersonType type)
     {
         //Do one object and instantiate it upon the worldMapPositioner to get its position correct, then we'll relocate it to the appropriate map
-        GameObject person1 = Instantiate(person, worldMapPositioner);
-        SpriteRenderer person1Sprite = person1.GetComponent<SpriteRenderer>();
-
+        GameObject person1 = Instantiate(person, _continents1Ref.transform);
         person1.transform.position = SpawnPoint();
+
+        SpriteRenderer person1Sprite = person1.GetComponent<SpriteRenderer>();
 
         //Colour and change shape of people
         switch (type)
@@ -119,11 +128,12 @@ public class PeopleManager : MonoBehaviour
                 break;
         }
 
-        GameObject person2 = Instantiate(person1, worldMapPositioner);
+        //Spawn Person 2
+        GameObject person2 = Instantiate(person1, _continents2Ref.transform);        
 
         //Relocate Person1 and Person2 to their respective maps
-        person1.transform.parent = _continents1Ref.transform;
-        person2.transform.parent = _continents2Ref.transform;
+        /*person1.transform.parent = _continents1Ref.transform;
+        person2.transform.parent = _continents2Ref.transform;*/
 
         //Finally, instantiate the person after create a second copy on the other map
         //We don't care about sending the correct playerPos, as this is just used to calculate distance and not stored

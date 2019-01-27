@@ -14,9 +14,6 @@ public class ScreenManager : MonoBehaviour
     public GameObject logoScreen;
     public GameObject menuScreen;
 
-    //PauseScreen is treated separately to the other major screens, as it displays over the GameScreen
-    public GameObject pauseScreen;
-
     //Storing references to the current screen
     private GameObject _curScreenObject;
     private GameScreens _curScreen;
@@ -51,9 +48,6 @@ public class ScreenManager : MonoBehaviour
                 break;
             case GameScreens.MenuScreen:
                 _curScreenObject = menuScreen;
-                break;
-            case GameScreens.PauseScreen:
-                _curScreenObject = pauseScreen;
                 break;
         }
 

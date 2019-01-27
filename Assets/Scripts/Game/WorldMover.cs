@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WorldMover : MonoBehaviour
 {
+    public GameManager gameManager;
     public PeopleManager peopleManager;
     public ConnectionManager connectionManager;
 
@@ -73,68 +74,74 @@ public class WorldMover : MonoBehaviour
 
     private void Update()
     {
-        if (_moving)
+        if (gameManager.gamePlaying)
         {
-            continents.transform.Translate(continentMoveSpeed * Time.deltaTime, 0, 0);
-            continents2.transform.Translate(continentMoveSpeed * Time.deltaTime, 0, 0);
-            clouds.transform.Translate(cloudMoveSpeed * Time.deltaTime, 0, 0);
-            clouds2.transform.Translate(cloudMoveSpeed * Time.deltaTime, 0, 0);
-
-            //Check to see if we need to relocate anything
-            if (_curContinent.transform.position.x >= _continentRespawnPosX)
+            if (_moving)
             {
-                if (_curContinent.name == "WorldMap")
-                {
-                    Debug.Log("Moving WorldMapBig");
-                    _curContinent.transform.position = SpawnPosition(continents2.transform.position, _continentWidth);
+                continents.transform.Translate(continentMoveSpeed * Time.deltaTime, 0, 0);
+                continents2.transform.Translate(continentMoveSpeed * Time.deltaTime, 0, 0);
+                clouds.transform.Translate(cloudMoveSpeed * Time.deltaTime, 0, 0);
+                clouds2.transform.Translate(cloudMoveSpeed * Time.deltaTime, 0, 0);
 
-                    //Change the current continent and update the player that is our main
-                    _curContinent = continents2;
-                    
-                    //If the player is selected, deactivate the current line
-                    if (connectionManager.playerSelected)
+                //Check to see if we need to relocate anything
+                if (_curContinent.transform.position.x >= _continentRespawnPosX)
+                {
+                    if (_curContinent.name == "WorldMap")
                     {
-                        connectionManager.currentPlayer.GetComponent<LineRenderer>().enabled = false;
+                        Debug.Log("Moving WorldMapBig");
+                        _curContinent.transform.position = SpawnPosition(continents2.transform.position, _continentWidth);
+
+                        //Change the current continent and update the player that is our main
+                        _curContinent = continents2;
+
+                        //If the player is selected, deactivate the current line
+                        if (connectionManager.playerSelected)
+                        {
+                            connectionManager.currentPlayer.GetComponent<LineRenderer>().enabled = false;
+                        }
+
+                        //Set the new currentPlayer
+                        connectionManager.currentPlayer = continents2.transform.Find("Player").gameObject;
                     }
-
-                    //Set the new currentPlayer
-                    connectionManager.currentPlayer = continents2.transform.Find("Player").gameObject;
-                }
-                else
-                {
-                    Debug.Log("Moving WorldMapBig(Clone)");
-                    _curContinent.transform.position = SpawnPosition(continents.transform.position, _continentWidth);
-
-                    //Change the current continent and player that is our main
-                    _curContinent = continents;
-
-                    //If the player is selected, deactivate the current line
-                    if (connectionManager.playerSelected)
+                    else
                     {
-                        connectionManager.currentPlayer.GetComponent<LineRenderer>().enabled = false;
+                        Debug.Log("Moving WorldMapBig(Clone)");
+                        _curContinent.transform.position = SpawnPosition(continents.transform.position, _continentWidth);
+
+                        //Change the current continent and player that is our main
+                        _curContinent = continents;
+
+                        //If the player is selected, deactivate the current line
+                        if (connectionManager.playerSelected)
+                        {
+                            connectionManager.currentPlayer.GetComponent<LineRenderer>().enabled = false;
+                        }
+
+                        connectionManager.currentPlayer = continents.transform.Find("Player").gameObject;
                     }
-
-                    connectionManager.currentPlayer = continents.transform.Find("Player").gameObject;
                 }
-            }
 
-            if(_curClouds.transform.position.x >= _cloudsRespawnPosX)
-            {
-                if (_curClouds.name == "Clouds")
+                //Updatee the references in PeopleManager every frame
+                peopleManager.UpdateMapReferences(continents, continents2);
+
+                if (_curClouds.transform.position.x >= _cloudsRespawnPosX)
                 {
-                    Debug.Log("Moving Clouds");
-                    _curClouds.transform.position = SpawnPosition(clouds2.transform.position, _cloudsWidth);
-                    _curClouds = clouds2;
+                    if (_curClouds.name == "Clouds")
+                    {
+                        Debug.Log("Moving Clouds");
+                        _curClouds.transform.position = SpawnPosition(clouds2.transform.position, _cloudsWidth);
+                        _curClouds = clouds2;
+                    }
+                    else
+                    {
+                        Debug.Log("Moving Clouds(Clone)");
+                        _curClouds.transform.position = SpawnPosition(clouds.transform.position, _cloudsWidth);
+                        _curClouds = clouds;
+                    }
                 }
-                else
-                {
-                    Debug.Log("Moving Clouds(Clone)");
-                    _curClouds.transform.position = SpawnPosition(clouds.transform.position, _cloudsWidth);
-                    _curClouds = clouds;
-                }
-            }
 
-            peopleManager.OrderDrawLines(); //Update any drawn lines
+                peopleManager.OrderDrawLines(); //Update any drawn lines
+            }
         }
     }
 
