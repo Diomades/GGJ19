@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public bool skipOpening;
+
     public GameLaunch gameLaunch;
     public ScreenManager screenManager;
     public FadeInOut fadeInOut;
@@ -13,9 +15,23 @@ public class GameManager : MonoBehaviour
     //This is the only script that should start anything
     void Start()
     {
-        //Start everything
         screenManager.StartScreenManager(this);
-        gameLaunch.BeginSequence(this);
+
+        if (skipOpening)
+        {
+            //Hide all the other menu screens to skip straight to gameplay
+            screenManager.ChangeCurrentScreen(GameScreens.GameScreen);
+
+            //Start moving everything
+            gameLaunch.worldMover.StartMoving();
+            gamePlaying = true;
+        }
+        else
+        {
+            //Start everything
+            screenManager.StartScreenManager(this);
+            gameLaunch.BeginSequence(this);
+        }        
     }
 
     //The StartGame button activates this function

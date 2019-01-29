@@ -6,32 +6,20 @@ public class LineDraw : MonoBehaviour
 {
     public ConnectionManager connectionManager;
 
-    private GameObject _player1;
-    private GameObject _player2;
+    private GameObject _player;
 
     public bool currentlyPlaying = false;
 
-    public void StoreReferences(GameObject p1, GameObject p2)
+    public void StoreReferences(GameObject player)
     {
-        _player1 = p1;
-        _player2 = p2;
+        _player = player;
 
         currentlyPlaying = true;
     }
 
     //Cycles through and draws all the necessary lines per frame update for whatever lines need to be drawn
-    public void DrawLines(List<GameObject> people, bool people1)
+    public void DrawLines(List<GameObject> people)
     {
-        GameObject refPlayer;
-        if (people1)
-        {
-            refPlayer = _player1;
-        }
-        else
-        {
-            refPlayer = _player2;
-        }
-
         foreach (GameObject person in people)
         {
             LineRenderer lineRenderer = person.GetComponent<LineRenderer>();
@@ -41,7 +29,7 @@ public class LineDraw : MonoBehaviour
             {
                 var points = new Vector3[2];
                 points[0] = person.transform.position;
-                points[1] = refPlayer.transform.position;
+                points[1] = _player.transform.position;
                 lineRenderer.SetPositions(points);
             }
         }
