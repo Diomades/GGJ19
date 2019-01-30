@@ -162,7 +162,7 @@ PrefabInstance:
     - target: {fileID: 1166732623664118436, guid: 6669c7c37fdf14448beef8639d68f31c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1166732623664118436, guid: 6669c7c37fdf14448beef8639d68f31c,
         type: 3}
@@ -2453,6 +2453,7 @@ MonoBehaviour:
   gameManager: {fileID: 1786879062}
   peopleManager: {fileID: 1689417831}
   connectionManager: {fileID: 1689417832}
+  lineDraw: {fileID: 1689417834}
   worldMapParent: {fileID: 655576517500554852}
   continentsMain: {fileID: 573728875}
   clouds1: {fileID: 1819226237}
@@ -2488,6 +2489,8 @@ MonoBehaviour:
   person: {fileID: 4055714621564613311, guid: 57480f920e967854bb7df3b1953dcf90, type: 3}
   worldMapBounds: {fileID: 573728877}
   worldMapCollider: {fileID: 5122961051293904644}
+  originalPlayer: {fileID: 0}
+  people: []
 --- !u!114 &1689417832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2503,6 +2506,7 @@ MonoBehaviour:
   peopleManager: {fileID: 1689417831}
   worldMover: {fileID: 1689417830}
   gameEvents: {fileID: 1689417835}
+  lineDraw: {fileID: 1689417834}
   playerSelected: 0
   currentPlayer: {fileID: 0}
   totalLinks: 0
@@ -2533,7 +2537,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectionManager: {fileID: 1689417832}
-  currentlyPlaying: 1
+  peopleManager: {fileID: 1689417831}
+  renderLines: []
 --- !u!114 &1689417835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3106,7 +3111,7 @@ PrefabInstance:
     - target: {fileID: 530564679855791834, guid: 6e3561493a869774496e128538ad6ce9,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 530564679855791834, guid: 6e3561493a869774496e128538ad6ce9,
         type: 3}
@@ -3192,7 +3197,7 @@ PrefabInstance:
     - target: {fileID: 1166732623664118436, guid: 6669c7c37fdf14448beef8639d68f31c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1166732623664118436, guid: 6669c7c37fdf14448beef8639d68f31c,
         type: 3}

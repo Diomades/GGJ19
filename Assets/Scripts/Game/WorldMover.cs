@@ -7,6 +7,7 @@ public class WorldMover : MonoBehaviour
     public GameManager gameManager;
     public PeopleManager peopleManager;
     public ConnectionManager connectionManager;
+    public LineDraw lineDraw;
 
     public Transform worldMapParent;
 
@@ -47,7 +48,7 @@ public class WorldMover : MonoBehaviour
         SetUpContinents();
 
         //Store our initial reference to the current player position
-        connectionManager.currentPlayer = _continents1.transform.Find("Player").gameObject;
+        //connectionManager.currentPlayer = _continents1.transform.Find("Player").gameObject;
 
         //Move the camera appropriately to the player spawn point
         //MoveStartCamera(connectionManager.currentPlayer);
@@ -82,6 +83,9 @@ public class WorldMover : MonoBehaviour
         {
             _curContinent = _continents2;
         }
+
+        //Send a reference of the current player to the Connection Manager
+        connectionManager.currentPlayer = _curContinent.GetComponent<ContinentManager>().player;
     }
 
     public void MoveStartCamera(GameObject player)
@@ -170,13 +174,17 @@ public class WorldMover : MonoBehaviour
                     }
                 }
 
-                peopleManager.OrderDrawLines(); //Update any drawn lines
+                lineDraw.DrawLines(continentMoveSpeed * Time.deltaTime); //Update any drawn lines
             }
         }
     }
 
     private void SetUpContinents()
     {
+        //Store information about the main continent before we do anything
+        ContinentManager contMan = continentsMain.GetComponent<ContinentManager>();
+        contMan.InstantiateContinent(connectionManager, gameManager, continentsMain.transform.Find("Player").gameObject);
+
         //Store information about the respawn details for the continents
         BoxCollider2D curCollider = continentsMain.transform.GetComponent<BoxCollider2D>(); //Get the box collider
         _continentWidth = curCollider.size.x * continentsMain.transform.localScale.x;
@@ -186,6 +194,8 @@ public class WorldMover : MonoBehaviour
         //We generate copies of the current continent map and move the main version side
         _continents1 = Instantiate(continentsMain, worldMapParent);
         _continents2 = Instantiate(continentsMain, worldMapParent);
+
+        connectionManager.currentPlayer = _continents1.GetComponent<ContinentManager>().player;
 
         //Change the position of the second set of continents and set the first continent as our main
         _continents2.transform.position = SpawnPosition(continentsMain.transform.position, _continentWidth);

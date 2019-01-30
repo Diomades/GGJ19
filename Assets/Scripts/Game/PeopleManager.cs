@@ -30,8 +30,9 @@ public class PeopleManager : MonoBehaviour
 
     private GameObject _worldMapMain;
 
-    Vector3 lineStartPos;
-    private List<GameObject> _people = new List<GameObject>();
+    public GameObject originalPlayer;
+    private int _peopleID = 0;
+    public List<GameObject> people = new List<GameObject>();
 
     public void StartGenerate(GameObject mapRef)
     {
@@ -43,49 +44,6 @@ public class PeopleManager : MonoBehaviour
 
         //Start spawning friends and others
         StartCoroutine(SpawnTimer());
-    }
-
-    //Update all of the spawned people at a certain rate
-    private void Update()
-    {
-        if (gameManager.gamePlaying)
-        {
-            for (int i = 0; i < _people.Count; i++)
-            {
-                PersonScript person = _people[i].GetComponent<PersonScript>();
-
-                person.UpdateStrength(updateRate);
-
-                if (person.queueKill)
-                {
-                    //Check if we had a connection to this person
-                    if (_people[i].GetComponent<LineRenderer>().enabled)
-                    {
-                        //Reduce total links as we just lost one
-                        connectionManager.totalLinks--;
-
-                        //Check if there's any event to display appropriate text for
-                        if (person.thisPersonType == PersonType.Friend)
-                        {
-                            gameEvents.CheckRunEvent(GameEvent.FriendshipLoss);
-                        }
-                        else if (person.thisPersonType == PersonType.Lover)
-                        {
-                            gameEvents.CheckRunEvent(GameEvent.LoveLoss);
-                        }
-                    }
-
-                    //Remove the line renderer
-                    _people[i].GetComponent<LineRenderer>().enabled = false;
-
-                    //Destroy the person and remove them from the lists
-                    Destroy(person);
-                    _people.RemoveAt(i);
-
-                    i--; //Go back one to account for the removal
-                }
-            }
-        }
     }
 
     private void SpawnPerson(PersonType type)
@@ -102,7 +60,8 @@ public class PeopleManager : MonoBehaviour
             case PersonType.Player:
                 thisPersonSprite.color = playerColor;
                 thisPersonSprite.sprite = playerSprite;
-                lineStartPos = thisPerson.transform.position; //Store the position of Person 1 for distance measuring
+                originalPlayer = thisPerson; //Store the original player
+                thisPerson.name = "Player";
                 break;
             case PersonType.Friend:
                 thisPersonSprite.color = friendColor;
@@ -114,27 +73,19 @@ public class PeopleManager : MonoBehaviour
                 break;
         }
 
-        //thisScript.InstantiatePerson()
+        //Instantiate the person!
+        thisScript.InstantiatePerson(originalPlayer.transform.position, type, lineColor, flashColor);
 
-        if (type == PersonType.Player)
+        if (type != PersonType.Player)
         {
-            thisPerson.name = "Player";
-
-            lineDraw.StoreReferences(thisPerson);
-        }
-        else
-        {
+            //Give this person a name and ID
+            _peopleID++;
+            thisPerson.name = "Person" + _peopleID;
             //Add the person to the people list
-            _people.Add(thisPerson);
+            people.Add(thisPerson);
             //Tell the WorldMover that it needs to refresh the World Maps
             worldMover.UpdateContinents();
         }
-    }
-
-    //Repeated on update and accessed by another function. Simply delegates the DrawLine function twice as appropriate to both groups
-    public void OrderDrawLines()
-    {
-        lineDraw.DrawLines(_people);
     }
 
     private Vector3 SpawnPoint()

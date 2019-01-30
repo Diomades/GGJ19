@@ -13,20 +13,11 @@ public class PersonScript : MonoBehaviour
     private float _friendship; //A modifier to FadeSpeed that says we're friends
     public PersonType thisPersonType; //The type of person this is
 
-    private PersonScript _sister; //The other version of this person elsewhere
-
     public bool queueKill = false; //Queue this person to be destroyed
 
-    /*public bool flashLine = false; //Whether or not the line needs to flash because we're in danger of no longer being friends
-    private bool _flashOn = false; //Whether the flash is currently on
-    private Color _lineColor; //The default line color
-    private Color _flashColor; //The flashing line color*/
-
-    public void InstantiatePerson(Vector3 playerPos, PersonType type, ConnectionManager man, Color lineColor, Color flashColor)
+    public void InstantiatePerson(Vector3 playerPos, PersonType type, Color lineColor, Color flashColor)
     {
         thisPersonType = type; //Save our type for later use
-        _connectionManager = man; //Store a reference to the People Manager
-        Debug.Log("Created person with " + _connectionManager);
 
         //If it's not a player, get a distance, calculate strength and fade speed
         if (type != PersonType.Player)
@@ -67,35 +58,16 @@ public class PersonScript : MonoBehaviour
 
             //Update the color
             this.gameObject.GetComponent<SpriteRenderer>().color = newColor;
-        }        
-        
-        //None of this works, don't bother. Line renderer is not a great solution for this.
-        /*//If our strength is below a certain level, flash the line
-        if (_strength <= 0.4f && !flashLine)
-        {
-            Debug.Log("Turning on flash!");
-            this.GetComponent<LineRenderer>().colorGradient.colorKeys = new GradientColorKey[] { new GradientColorKey(_flashColor, 0f), new GradientColorKey(_flashColor, 1f) };
-            //flashLine = true;
-            //StartCoroutine(Flash());
         }
-        else if (_strength > 0.4f)
-        {
-            Debug.Log("Turning off flash");
-            flashLine = false;
-        }*/
-    }
-
-    //Store a reference to this person's sister object
-    public void StoreSisterPerson(PersonScript sister)
-    {
-        _sister = sister;
     }
 
     //On click, pass details to the Connection Manager and let it handle them
     void OnMouseDown()
     {
-        Debug.Log(thisPersonType + " was clicked, sending " + this + " to " + _connectionManager);
-        _connectionManager.PersonClicked(thisPersonType, this);
+        //Store a reference to the connection manager manually
+        ConnectionManager connectionManager = GameObject.Find("GameplayScripts").GetComponent<ConnectionManager>();
+        Debug.Log(thisPersonType + " was clicked, sending " + this + " to " + connectionManager);
+        connectionManager.PersonClicked(thisPersonType, this.gameObject);
     }
 
     public void MakeConnection()
@@ -106,49 +78,4 @@ public class PersonScript : MonoBehaviour
 
         this.GetComponent<LineRenderer>().enabled = true; //Activate the line
     }
-
-    //Tell the sister to update separately
-    public void ConnectSister()
-    {
-        _sister.MakeConnection();
-    }
-
-    /*IEnumerator Flash()
-    {
-        //We need to create a GradientColorKey for the line
-        //GradientColorKey curColor = new GradientColorKey[];
-        Color curColor;
-
-        while (flashLine) //If we wanted this to not flash when paused we could do a "While Playing" bool
-        {
-            _flashOn = !_flashOn;
-            if (_flashOn)
-            {
-                //Store the flash color on the gradient and apply it to the variable
-                curColor = _flashColor;
-                Debug.Log("Flash On!");
-                //gradient[0] = curColor;
-                
-            }
-            else
-            {
-                //Store the line color on the gradient and apply it to the variable
-                curColor = _lineColor;
-                Debug.Log("Flash Off!");
-                //gradient[0] = curColor;
-            }
-
-            //Apply the color
-            //this.GetComponent<LineRenderer>().colorGradient.colorKeys = new GradientColorKey[] { new GradientColorKey(curColor,0f) };
-            this.GetComponent<LineRenderer>().material.color = curColor;
-
-            //Wait and do it again
-            yield return new WaitForSeconds(1f);
-        }
-
-        //We've broken out of the while loop and can go back to the standard color
-        /*curColor.color = _lineColor;
-        gradient[0] = curColor;
-        this.GetComponent<LineRenderer>().colorGradient.colorKeys = gradient;*/
-    //}
 }

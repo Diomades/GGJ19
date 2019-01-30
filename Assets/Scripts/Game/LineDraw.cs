@@ -1,38 +1,68 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vectrosity;
 
 public class LineDraw : MonoBehaviour
 {
     public ConnectionManager connectionManager;
+    public PeopleManager peopleManager;
 
-    private GameObject _player;
+    public List<LineRenderer> renderLines = new List<LineRenderer>();
 
-    public bool currentlyPlaying = false;
-
-    public void StoreReferences(GameObject player)
+    public void DrawLine(GameObject target)
     {
-        _player = player;
+        //From the target, we get the name and a Vector3 position
+        string tarName = target.name;
+        Vector3 tarPos = target.transform.position;
 
-        currentlyPlaying = true;
-    }
+        //Get the CURRENT Player pos and form a Vector3 relative to this position
+        Vector3 relPos = connectionManager.currentPlayer.transform.position - tarPos;
 
-    //Cycles through and draws all the necessary lines per frame update for whatever lines need to be drawn
-    public void DrawLines(List<GameObject> people)
-    {
-        foreach (GameObject person in people)
+        //Apply this relative pos with the original player position
+        relPos += peopleManager.originalPlayer.transform.position;
+        Vector3 startPos;
+
+        LineRenderer tarLine;
+
+        //Find the original version of this person and get the line renderer attached to them
+        foreach (GameObject person in peopleManager.people)
         {
-            LineRenderer lineRenderer = person.GetComponent<LineRenderer>();
-
-            //Only do an update if the line renderer is enabled
-            if (lineRenderer.enabled)
+            if(person.name == target.name)
             {
+                tarLine = person.GetComponent<LineRenderer>();                
+                startPos = person.transform.position;
+
+                //Draw the line appropriately
+                tarLine.enabled = true;
                 var points = new Vector3[2];
-                points[0] = person.transform.position;
-                points[1] = _player.transform.position;
-                lineRenderer.SetPositions(points);
+                points[0] = startPos;
+                points[1] = relPos;
+                tarLine.SetPositions(points);
+
+                //Add the line to our list to be rendered
+                renderLines.Add(tarLine);
             }
         }
+    }
+
+    //Draw the lines we want to draw
+    public void DrawLines(float xOffset)
+    {
+        if (renderLines.Count != 0)
+        {
+            foreach (LineRenderer line in renderLines)
+            {
+                //Store the points
+                var points = new Vector3[2];
+                points[0] = line.GetPosition(0);
+                points[1] = line.GetPosition(1);
+
+                //Offset our points appropriately
+                points[0].x += xOffset;
+                points[1].x += xOffset;
+            }
+        }        
 
         //With all that done, check to see if we need to draw a point to the mouse pointer
         DrawLineToMousePointer();
