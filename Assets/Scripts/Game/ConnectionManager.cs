@@ -51,7 +51,9 @@ public class ConnectionManager : MonoBehaviour
                 playerSelected = false;
 
                 //Render the line between the two clicked objects
-                lineDraw.DrawLine(clicked);
+                lineDraw.GenerateLine(clicked);
+                //Since we just drew a new line, update the maps!
+                worldMover.UpdateContinents();
             }
         }
     }

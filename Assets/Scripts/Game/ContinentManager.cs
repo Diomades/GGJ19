@@ -1,26 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vectrosity;
 
 public class ContinentManager : MonoBehaviour
 {
     public ConnectionManager connectionManager;
     public GameManager gameManager;
-    //public List<GameObject> originalPeople = new List<GameObject>();
+    public LineDraw lineDraw;
     public GameObject player;
 
-    public void InstantiateContinent(ConnectionManager conMan, GameManager gameMan, GameObject man)
+    public List<List<Vector3>> lines = new List<List<Vector3>>(); //A list of lists of coordinates
+    public List<VectorLine> vectorLines = new List<VectorLine>();
+
+    public void InstantiateMainContinent(ConnectionManager conMan, GameManager gameMan, LineDraw lineMan, GameObject man)
     {
         connectionManager = conMan;
         gameManager = gameMan;
+        lineDraw = lineMan;
         player = man;
+    }
+
+    public void InstantiateNewContinent(List<List<Vector3>> mainLines)
+    {
+        lines = mainLines;
+
+        foreach (List<Vector3> points in lines)
+        {
+            lineDraw.DrawLine(points, this.transform);
+        }
+    }
+
+    public void AddLine(List<Vector3> locations)
+    {
+        lines.Add(locations);
     }
 
     public void PingContinent()
     {
         Debug.Log("Confirming things are working on " + this.name + ". Connection Manager: " + connectionManager + " Game Manager: " + gameManager + " Player: " + player);
     }
-
 
     //Update all of the spawned people at a certain rate
     /*private void Update()

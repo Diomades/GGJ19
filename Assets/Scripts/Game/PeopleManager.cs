@@ -88,6 +88,24 @@ public class PeopleManager : MonoBehaviour
         }
     }
 
+    public void UpdatePeople()
+    {
+        for(int i = 0; i < people.Count; i++)
+        {
+            PersonScript person = people[i].GetComponent<PersonScript>();
+            person.UpdateStrength(updateRate); //Update this persons strength
+
+            if (person.queueKill)
+            {
+                //Erase the line, remove this person from the people list, and destroy them
+                lineDraw.EraseLine(person.lineRef);
+                people.RemoveAt(i);
+                Destroy(person.transform.gameObject);
+                i--; //Go back one so we don't skip the next object
+            }
+        }
+    }
+
     private Vector3 SpawnPoint()
     {
         int attempt = 0;

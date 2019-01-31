@@ -7,68 +7,52 @@ public class LineDraw : MonoBehaviour
 {
     public ConnectionManager connectionManager;
     public PeopleManager peopleManager;
+    public WorldMover worldMover;
 
-    public List<LineRenderer> renderLines = new List<LineRenderer>();
-
-    public void DrawLine(GameObject target)
+    public void GenerateLine(GameObject target)
     {
         //From the target, we get the name and a Vector3 position
         string tarName = target.name;
-        Vector3 tarPos = target.transform.position;
 
-        //Get the CURRENT Player pos and form a Vector3 relative to this position
-        Vector3 relPos = connectionManager.currentPlayer.transform.position - tarPos;
+        //Get the local version of the positions
+        Vector3 localTar = worldMover.curContinent.transform.InverseTransformPoint(target.transform.position);
+        Vector3 localPlayer = worldMover.curContinent.transform.InverseTransformPoint(connectionManager.currentPlayer.transform.position);
 
-        //Apply this relative pos with the original player position
-        relPos += peopleManager.originalPlayer.transform.position;
-        Vector3 startPos;
-
-        LineRenderer tarLine;
-
-        //Find the original version of this person and get the line renderer attached to them
-        foreach (GameObject person in peopleManager.people)
-        {
-            if(person.name == target.name)
-            {
-                tarLine = person.GetComponent<LineRenderer>();                
-                startPos = person.transform.position;
-
-                //Draw the line appropriately
-                tarLine.enabled = true;
-                var points = new Vector3[2];
-                points[0] = startPos;
-                points[1] = relPos;
-                tarLine.SetPositions(points);
-
-                //Add the line to our list to be rendered
-                renderLines.Add(tarLine);
-            }
-        }
+        //Add local version of the pointts to a list
+        List<Vector3> localPoints = new List<Vector3>() { localTar, localPlayer };
+        worldMover.continentsMain.GetComponent<ContinentManager>().AddLine(localPoints);
     }
 
-    //Draw the lines we want to draw
-    public void DrawLines(float xOffset)
+    public void DrawLine(List<Vector3> points, Transform parent)
     {
-        if (renderLines.Count != 0)
-        {
-            foreach (LineRenderer line in renderLines)
-            {
-                //Store the points
-                var points = new Vector3[2];
-                points[0] = line.GetPosition(0);
-                points[1] = line.GetPosition(1);
+        //First, offset by our relative position and add to a new list
+        List<Vector3> pointsOffset = new List<Vector3>() { parent.TransformPoint(points[0]), parent.TransformPoint(points[1]) };
 
-                //Offset our points appropriately
-                points[0].x += xOffset;
-                points[1].x += xOffset;
-            }
-        }        
+        VectorLine newLine = new VectorLine("Line", pointsOffset, 1f);
 
-        //With all that done, check to see if we need to draw a point to the mouse pointer
-        DrawLineToMousePointer();
+        newLine.Draw3D();
+        newLine.drawTransform = parent;
+        newLine.rectTransform.SetParent(parent);
     }
 
-    private void DrawLineToMousePointer()
+    public void DrawVectorLine(VectorLine line)
+    {
+        line.Draw3D();      
+    }
+
+    public void EraseLine(VectorLine line)
+    {
+        VectorLine.Destroy(ref line);
+    }
+
+    //Erase all lines whenever we're deleting a continent
+    public void EraseLines(List<VectorLine> lines)
+    {
+        VectorLine.Destroy(lines);
+    }
+
+    //Rewrite this to use Vectrosity!
+    public void DrawLineToMousePointer()
     {
         if (connectionManager.playerSelected)
         {

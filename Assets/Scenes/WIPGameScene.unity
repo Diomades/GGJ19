@@ -2538,6 +2538,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectionManager: {fileID: 1689417832}
   peopleManager: {fileID: 1689417831}
+  worldMover: {fileID: 1689417830}
   renderLines: []
 --- !u!114 &1689417835
 MonoBehaviour:

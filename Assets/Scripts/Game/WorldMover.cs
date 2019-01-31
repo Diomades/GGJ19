@@ -24,9 +24,10 @@ public class WorldMover : MonoBehaviour
     private bool _moving = false;
 
     private bool _curCont1;
-    private GameObject _curContinent;
+    public GameObject curContinent;
     private float _continentWidth;
     private float _continentRespawnPosX;
+    public Vector3 mapOffset = new Vector3();
 
     private GameObject _curClouds;
     private float _cloudsWidth;
@@ -64,7 +65,9 @@ public class WorldMover : MonoBehaviour
         Vector3 cont1Pos = _continents1.transform.position;
         Vector3 cont2Pos = _continents2.transform.position;
 
-        //Destroy the old versions
+        //Destroy the old versions, starting with lines first
+        //lineDraw.EraseLines(_continents1.GetComponent<ContinentManager>().lines);
+        //lineDraw.EraseLines(_continents2.GetComponent<ContinentManager>().lines);
         Destroy(_continents1);
         Destroy(_continents2);
 
@@ -74,18 +77,24 @@ public class WorldMover : MonoBehaviour
         _continents1.transform.position = cont1Pos;
         _continents2.transform.position = cont2Pos;
 
+        //Redraw all lines
+        //lineDraw.EraseAllLines();
+        //Debug.Log("Continent manager lines: " + continentsMain.GetComponent<ContinentManager>().lines.Count);
+        _continents1.GetComponent<ContinentManager>().InstantiateNewContinent(continentsMain.GetComponent<ContinentManager>().lines);
+        _continents2.GetComponent<ContinentManager>().InstantiateNewContinent(continentsMain.GetComponent<ContinentManager>().lines);
+
         //Set our current continent
         if (_curCont1)
         {
-            _curContinent = _continents1;
+            curContinent = _continents1;
         }
         else
         {
-            _curContinent = _continents2;
+            curContinent = _continents2;
         }
 
         //Send a reference of the current player to the Connection Manager
-        connectionManager.currentPlayer = _curContinent.GetComponent<ContinentManager>().player;
+        connectionManager.currentPlayer = curContinent.GetComponent<ContinentManager>().player;
     }
 
     public void MoveStartCamera(GameObject player)
@@ -109,7 +118,7 @@ public class WorldMover : MonoBehaviour
         }
     }
 
-    private void Update()
+    void Update()
     {
         if (gameManager.gamePlaying)
         {
@@ -121,14 +130,14 @@ public class WorldMover : MonoBehaviour
                 clouds2.transform.Translate(cloudMoveSpeed * Time.deltaTime, 0, 0);
 
                 //Check to see if we need to relocate anything
-                if (_curContinent.transform.position.x >= _continentRespawnPosX)
+                if (curContinent.transform.position.x >= _continentRespawnPosX)
                 {
                     if (_curCont1)
                     {
-                        _curContinent.transform.position = SpawnPosition(_continents2.transform.position, _continentWidth);
+                        curContinent.transform.position = SpawnPosition(_continents2.transform.position, _continentWidth);
 
                         //Change the current continent and update the player that is our main
-                        _curContinent = _continents2;
+                        curContinent = _continents2;
                         _curCont1 = false;
 
                         //If the player is selected, deactivate the current line
@@ -142,10 +151,10 @@ public class WorldMover : MonoBehaviour
                     }
                     else
                     {
-                        _curContinent.transform.position = SpawnPosition(_continents1.transform.position, _continentWidth);
+                        curContinent.transform.position = SpawnPosition(_continents1.transform.position, _continentWidth);
 
                         //Change the current continent and player that is our main
-                        _curContinent = _continents1;
+                        curContinent = _continents1;
                         _curCont1 = true;
 
                         //If the player is selected, deactivate the current line
@@ -174,16 +183,23 @@ public class WorldMover : MonoBehaviour
                     }
                 }
 
-                lineDraw.DrawLines(continentMoveSpeed * Time.deltaTime); //Update any drawn lines
+                mapOffset = continentsMain.transform.position - curContinent.transform.position; //Store the offset of the main continents position to our current continents position
+                lineDraw.DrawLineToMousePointer(); //Update the mouse pointer line
             }
         }
+    }
+
+    //Update the lines?
+    private void LateUpdate()
+    {
+        //lineDraw.UpdateLines();
     }
 
     private void SetUpContinents()
     {
         //Store information about the main continent before we do anything
         ContinentManager contMan = continentsMain.GetComponent<ContinentManager>();
-        contMan.InstantiateContinent(connectionManager, gameManager, continentsMain.transform.Find("Player").gameObject);
+        contMan.InstantiateMainContinent(connectionManager, gameManager, lineDraw, continentsMain.transform.Find("Player").gameObject);
 
         //Store information about the respawn details for the continents
         BoxCollider2D curCollider = continentsMain.transform.GetComponent<BoxCollider2D>(); //Get the box collider
@@ -199,7 +215,7 @@ public class WorldMover : MonoBehaviour
 
         //Change the position of the second set of continents and set the first continent as our main
         _continents2.transform.position = SpawnPosition(continentsMain.transform.position, _continentWidth);
-        _curContinent = _continents1;
+        curContinent = _continents1;
         _curCont1 = true;
 
         //Move the main continent out of the way
