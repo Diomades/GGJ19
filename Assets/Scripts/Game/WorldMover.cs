@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -52,7 +52,7 @@ public class WorldMover : MonoBehaviour
         //connectionManager.currentPlayer = _continents1.transform.Find("Player").gameObject;
 
         //Move the camera appropriately to the player spawn point
-        //MoveStartCamera(connectionManager.currentPlayer);
+        MoveStartCamera(connectionManager.currentPlayer);
 
         _moving = true;
     }
@@ -77,11 +77,11 @@ public class WorldMover : MonoBehaviour
         _continents1.transform.position = cont1Pos;
         _continents2.transform.position = cont2Pos;
 
-        //Redraw all lines
-        //lineDraw.EraseAllLines();
-        //Debug.Log("Continent manager lines: " + continentsMain.GetComponent<ContinentManager>().lines.Count);
+        //Instantiate the continents and see if we need to swap players
         _continents1.GetComponent<ContinentManager>().InstantiateNewContinent(continentsMain.GetComponent<ContinentManager>().lines);
         _continents2.GetComponent<ContinentManager>().InstantiateNewContinent(continentsMain.GetComponent<ContinentManager>().lines);
+        float farPoint = continentsMain.GetComponent<BoxCollider2D>().bounds.center.x + Camera.main.transform.position.x; //This defines how far from the centre of the screen we're allowed to be
+        peopleManager.SwapPlayer(_continents1, _continents2, farPoint); //See if we can swap players
 
         //Set our current continent
         if (_curCont1)
@@ -94,7 +94,11 @@ public class WorldMover : MonoBehaviour
         }
 
         //Send a reference of the current player to the Connection Manager
-        connectionManager.currentPlayer = curContinent.GetComponent<ContinentManager>().player;
+        //connectionManager.currentPlayer = curContinent.GetComponent<ContinentManager>().player;
+
+        //Send references of our active players to PeopleManager
+        peopleManager.player1 = _continents1.transform.Find("Player").gameObject;
+        peopleManager.player2 = _continents2.transform.Find("Player").gameObject;
     }
 
     public void MoveStartCamera(GameObject player)
@@ -102,7 +106,6 @@ public class WorldMover : MonoBehaviour
         //BoxCollider2D curCollider = continents.transform.GetComponent<BoxCollider2D>();        
         float centerDistance = player.transform.position.x - Camera.main.transform.position.x;
 
-        Debug.Log(centerDistance);
         if (centerDistance < 0)
         {
             centerDistance = centerDistance * -1;
@@ -139,15 +142,6 @@ public class WorldMover : MonoBehaviour
                         //Change the current continent and update the player that is our main
                         curContinent = _continents2;
                         _curCont1 = false;
-
-                        //If the player is selected, deactivate the current line
-                        if (connectionManager.playerSelected)
-                        {
-                            connectionManager.currentPlayer.GetComponent<LineRenderer>().enabled = false;
-                        }
-
-                        //Set the new currentPlayer
-                        connectionManager.currentPlayer = _continents2.transform.Find("Player").gameObject;
                     }
                     else
                     {
@@ -184,7 +178,12 @@ public class WorldMover : MonoBehaviour
                 }
 
                 mapOffset = continentsMain.transform.position - curContinent.transform.position; //Store the offset of the main continents position to our current continents position
-                lineDraw.DrawLineToMousePointer(); //Update the mouse pointer line
+
+                //If the player has been selected
+                if (connectionManager.playerSelected)
+                {
+                    lineDraw.DrawLineToMousePointer(); //Update the mouse pointer line
+                }                
             }
         }
     }
@@ -222,6 +221,12 @@ public class WorldMover : MonoBehaviour
         Vector3 holdPos = continentsMain.transform.position;
         holdPos.y += 50; //Offset out of the way by 50.
         continentsMain.transform.position = holdPos;
+
+        //Send references of our active players to PeopleManager
+        peopleManager.player1 = _continents1.transform.Find("Player").gameObject;
+        peopleManager.player2 = _continents2.transform.Find("Player").gameObject;
+        //Set Player1 as the active player
+        peopleManager.player1Active = true;
     }
 
     private void SetUpClouds()

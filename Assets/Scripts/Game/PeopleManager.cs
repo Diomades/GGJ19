@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -102,6 +102,30 @@ public class PeopleManager : MonoBehaviour
                 people.RemoveAt(i);
                 Destroy(person.transform.gameObject);
                 i--; //Go back one so we don't skip the next object
+            }
+        }
+    }
+
+    //Check if the current player has moved far enough off the screen to swap to the other player
+    public void SwapPlayer(GameObject cont1, GameObject cont2, float farPoint)
+    {
+        float playerPos = connectionManager.currentPlayer.transform.position.x;
+
+        if (playerPos >= farPoint)
+        {
+            if (player1Active)
+            {
+                //Deactivate The Line
+
+                //Set the new currentPlayer
+                connectionManager.currentPlayer = cont2.transform.Find("Player").gameObject;
+            }
+            else
+            {
+                //Deactivate the Line
+
+                //Set the new currentPlayer
+                connectionManager.currentPlayer = cont1.transform.Find("Player").gameObject;
             }
         }
     }
