@@ -51,7 +51,7 @@ public class LineDraw : MonoBehaviour
         VectorLine.Destroy(lines);
     }
 
-    //Rewrite this to use Vectrosity!
+    //We draw the line to the mouse pointer using LineRenderer (for now?)
     public void DrawLineToMousePointer()
     {
         if (connectionManager.playerSelected)

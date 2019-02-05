@@ -80,8 +80,6 @@ public class WorldMover : MonoBehaviour
         //Instantiate the continents and see if we need to swap players
         _continents1.GetComponent<ContinentManager>().InstantiateNewContinent(continentsMain.GetComponent<ContinentManager>().lines);
         _continents2.GetComponent<ContinentManager>().InstantiateNewContinent(continentsMain.GetComponent<ContinentManager>().lines);
-        float farPoint = continentsMain.GetComponent<BoxCollider2D>().bounds.center.x + Camera.main.transform.position.x; //This defines how far from the centre of the screen we're allowed to be
-        peopleManager.SwapPlayer(_continents1, _continents2, farPoint); //See if we can swap players
 
         //Set our current continent
         if (_curCont1)
@@ -96,9 +94,22 @@ public class WorldMover : MonoBehaviour
         //Send a reference of the current player to the Connection Manager
         //connectionManager.currentPlayer = curContinent.GetComponent<ContinentManager>().player;
 
-        //Send references of our active players to PeopleManager
+        //Send references of our new players to PeopleManager
         peopleManager.player1 = _continents1.transform.Find("Player").gameObject;
         peopleManager.player2 = _continents2.transform.Find("Player").gameObject;
+
+        //Send a reference of our currently active player
+        if (peopleManager.player1Active)
+        {
+            connectionManager.currentPlayer = peopleManager.player1;
+        }
+        else
+        {
+            connectionManager.currentPlayer = peopleManager.player2;
+        }
+
+        //Make sure the line to the mouse pointer is still being drawn if it needs to be
+        lineDraw.DrawLineToMousePointer();
     }
 
     public void MoveStartCamera(GameObject player)
@@ -150,14 +161,6 @@ public class WorldMover : MonoBehaviour
                         //Change the current continent and player that is our main
                         curContinent = _continents1;
                         _curCont1 = true;
-
-                        //If the player is selected, deactivate the current line
-                        if (connectionManager.playerSelected)
-                        {
-                            connectionManager.currentPlayer.GetComponent<LineRenderer>().enabled = false;
-                        }
-
-                        connectionManager.currentPlayer = _continents1.transform.Find("Player").gameObject;
                     }
                 }
 
@@ -178,6 +181,9 @@ public class WorldMover : MonoBehaviour
                 }
 
                 mapOffset = continentsMain.transform.position - curContinent.transform.position; //Store the offset of the main continents position to our current continents position
+
+                //Check if we need to swap our currently active player now that everything has moved
+                peopleManager.SwapPlayer(_continents1, _continents2);
 
                 //If the player has been selected
                 if (connectionManager.playerSelected)

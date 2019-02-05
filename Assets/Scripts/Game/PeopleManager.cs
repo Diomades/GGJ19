@@ -31,6 +31,9 @@ public class PeopleManager : MonoBehaviour
     private GameObject _worldMapMain;
 
     public GameObject originalPlayer;
+    public GameObject player1;
+    public GameObject player2;
+    public bool player1Active;
     private int _peopleID = 0;
     public List<GameObject> people = new List<GameObject>();
 
@@ -107,27 +110,35 @@ public class PeopleManager : MonoBehaviour
     }
 
     //Check if the current player has moved far enough off the screen to swap to the other player
-    public void SwapPlayer(GameObject cont1, GameObject cont2, float farPoint)
+    public void SwapPlayer(GameObject cont1, GameObject cont2)
     {
-        float playerPos = connectionManager.currentPlayer.transform.position.x;
+        float player1Dist = Vector3.Distance(player1.transform.position, Camera.main.transform.position);
+        float player2Dist = Vector3.Distance(player2.transform.position, Camera.main.transform.position);
 
-        if (playerPos >= farPoint)
+        //Check the relevant player and see if their distance from the camera transform is further than the other point
+        if (player1Active & player1Dist > player2Dist)
         {
-            if (player1Active)
-            {
-                //Deactivate The Line
+            //Deactivate the old line
+            connectionManager.currentPlayer.GetComponent<LineRenderer>().enabled = false;
 
-                //Set the new currentPlayer
-                connectionManager.currentPlayer = cont2.transform.Find("Player").gameObject;
-            }
-            else
-            {
-                //Deactivate the Line
-
-                //Set the new currentPlayer
-                connectionManager.currentPlayer = cont1.transform.Find("Player").gameObject;
-            }
+            //Set the new currentPlayer
+            connectionManager.currentPlayer = cont2.transform.Find("Player").gameObject;
+            Debug.Log("Swapped to player 2 at " + connectionManager.currentPlayer);
+            player1Active = false;
         }
+        else if (!player1Active & player2Dist > player1Dist)
+        {
+            //Deactivate the old line
+            connectionManager.currentPlayer.GetComponent<LineRenderer>().enabled = false;
+
+            //Set the new currentPlayer
+            connectionManager.currentPlayer = cont1.transform.Find("Player").gameObject;
+            Debug.Log("Swapped to player 1 at " + connectionManager.currentPlayer);
+            player1Active = true;
+        }
+
+        //We just swapped players, so tell LineDraw to do its thing if necessary
+        lineDraw.DrawLineToMousePointer();
     }
 
     private Vector3 SpawnPoint()
