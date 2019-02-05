@@ -14,6 +14,8 @@ public class WorldMover : MonoBehaviour
     public GameObject continentsMain;
     private GameObject _continents1;
     private GameObject _continents2;
+    //ContinentsForward is a false continent ahead of our current continent to maintain lines
+    private GameObject _continentsForward;
 
     public GameObject clouds1;
     public GameObject clouds2;
@@ -64,22 +66,27 @@ public class WorldMover : MonoBehaviour
         //Whenever anything about the maps change, we delete these copies and instantiate new versions in their place
         Vector3 cont1Pos = _continents1.transform.position;
         Vector3 cont2Pos = _continents2.transform.position;
+        Vector3 contForwardPos = _continentsForward.transform.position;
 
         //Destroy the old versions, starting with lines first
         //lineDraw.EraseLines(_continents1.GetComponent<ContinentManager>().lines);
         //lineDraw.EraseLines(_continents2.GetComponent<ContinentManager>().lines);
         Destroy(_continents1);
         Destroy(_continents2);
+        Destroy(_continentsForward);
 
         //Instantiate the new versions and move them into position
         _continents1 = Instantiate(continentsMain, worldMapParent);
         _continents2 = Instantiate(continentsMain, worldMapParent);
+        _continentsForward = Instantiate(continentsMain, worldMapParent);
         _continents1.transform.position = cont1Pos;
         _continents2.transform.position = cont2Pos;
+        _continentsForward.transform.position = contForwardPos;
 
         //Instantiate the continents and see if we need to swap players
         _continents1.GetComponent<ContinentManager>().InstantiateNewContinent(continentsMain.GetComponent<ContinentManager>().lines);
         _continents2.GetComponent<ContinentManager>().InstantiateNewContinent(continentsMain.GetComponent<ContinentManager>().lines);
+        _continentsForward.GetComponent<ContinentManager>().InstantiateNewContinent(continentsMain.GetComponent<ContinentManager>().lines);
 
         //Set our current continent
         if (_curCont1)
@@ -140,6 +147,7 @@ public class WorldMover : MonoBehaviour
             {
                 _continents1.transform.Translate(continentMoveSpeed * Time.deltaTime, 0, 0);
                 _continents2.transform.Translate(continentMoveSpeed * Time.deltaTime, 0, 0);
+                _continentsForward.transform.Translate(continentMoveSpeed * Time.deltaTime, 0, 0);
                 clouds1.transform.Translate(cloudMoveSpeed * Time.deltaTime, 0, 0);
                 clouds2.transform.Translate(cloudMoveSpeed * Time.deltaTime, 0, 0);
 
@@ -162,6 +170,9 @@ public class WorldMover : MonoBehaviour
                         curContinent = _continents1;
                         _curCont1 = true;
                     }
+
+                    //Move our ForwardContinent appropriately to our new current continent - this should shift it back
+                    _continentsForward.transform.position = ForwardSpawnPosition(curContinent.transform.position, _continentWidth);
                 }
 
                 if (_curClouds.transform.position.x >= _cloudsRespawnPosX)
@@ -215,6 +226,8 @@ public class WorldMover : MonoBehaviour
         //We generate copies of the current continent map and move the main version side
         _continents1 = Instantiate(continentsMain, worldMapParent);
         _continents2 = Instantiate(continentsMain, worldMapParent);
+        //ContinentsForward is a false continent ahead of our current continent to maintain lines
+        _continentsForward = Instantiate(continentsMain, worldMapParent);
 
         connectionManager.currentPlayer = _continents1.GetComponent<ContinentManager>().player;
 
@@ -222,6 +235,9 @@ public class WorldMover : MonoBehaviour
         _continents2.transform.position = SpawnPosition(continentsMain.transform.position, _continentWidth);
         curContinent = _continents1;
         _curCont1 = true;
+
+        //Change the position of the forward continent for previewing purposes
+        _continentsForward.transform.position = ForwardSpawnPosition(continentsMain.transform.position, _continentWidth);
 
         //Move the main continent out of the way
         Vector3 holdPos = continentsMain.transform.position;
@@ -250,6 +266,15 @@ public class WorldMover : MonoBehaviour
     {
         Vector3 spawnPosition = curPos;
         spawnPosition.x -= colliderWidth;
+
+        return spawnPosition;
+    }
+
+    //Takes a Vector3 position and Collider width to decide on a spawn position for the forward continent
+    private Vector3 ForwardSpawnPosition(Vector3 curPos, float colliderWidth)
+    {
+        Vector3 spawnPosition = curPos;
+        spawnPosition.x += colliderWidth;
 
         return spawnPosition;
     }
