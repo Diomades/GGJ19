@@ -155,14 +155,14 @@ public class PeopleManager : MonoBehaviour
         }
         while (!worldMapCollider.OverlapPoint(new Vector2(spawnX, spawnY)) && attempt <= 100);
 
-        if(attempt >= 100)
+        /*if(attempt >= 100)
         {
             Debug.Log("Failed to spawn!");
         }
         else
         {
             Debug.Log("Spawned at " + spawnX + " " + spawnY + " after " + attempt + " attempts. Does it overlap? Unity thinks " + worldMapCollider.OverlapPoint(new Vector2(spawnX, spawnY)));
-        }
+        }*/
 
         return new Vector3(spawnX, spawnY, 1.5f); //Spawn a character between the Cloud and World layers if successful
     }

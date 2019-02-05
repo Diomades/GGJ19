@@ -7,7 +7,7 @@ public class PersonScript : MonoBehaviour
 {
     private ConnectionManager _connectionManager;
 
-    public string personName; //If we ever want to add names
+    public string personName; //To track whether or not we've connected to this person
     private float _distance; //The distance of this person from the player
     private float _strength; //The strength of the persons relationship to the player, between 0 and 1
     private float _fadeSpeed; //The speed at which strength wanes, between 0 and 1 / UpdateSpeed
@@ -68,10 +68,9 @@ public class PersonScript : MonoBehaviour
         connectionManager.PersonClicked(thisPersonType, this.gameObject);
     }
 
-    public void MakeConnection()
+    public void MakeRefreshConnection()
     {
         _strength = 1; //Refresh the strength because a connection has been made
-
         _friendship = 0.35f; //We are friends now, so our fade speed gets a benefit
     }
 
