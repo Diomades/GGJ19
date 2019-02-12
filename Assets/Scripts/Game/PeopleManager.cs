@@ -146,6 +146,7 @@ public class PeopleManager : MonoBehaviour
         int attempt = 0;
         float spawnX;
         float spawnY;
+        float spawnZ = worldMapCollider.transform.position.z - 0.5f;
 
         do
         {
@@ -164,7 +165,7 @@ public class PeopleManager : MonoBehaviour
             Debug.Log("Spawned at " + spawnX + " " + spawnY + " after " + attempt + " attempts. Does it overlap? Unity thinks " + worldMapCollider.OverlapPoint(new Vector2(spawnX, spawnY)));
         }*/
 
-        return new Vector3(spawnX, spawnY, 1.5f); //Spawn a character between the Cloud and World layers if successful
+        return new Vector3(spawnX, spawnY, spawnZ); //Spawn a character between the Cloud and World layers if successful
     }
 
     //Every 3-6 seconds, spawn a new person
