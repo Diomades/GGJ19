@@ -9,18 +9,22 @@ public class LineDraw : MonoBehaviour
     public PeopleManager peopleManager;
     public WorldMover worldMover;
 
+    private int id = 0;
+
     public void GenerateLine(GameObject target)
     {
         //From the target, we get the name and a Vector3 position
         string tarName = target.name;
+        PersonScript person = worldMover.continentsMain.transform.Find(tarName).GetComponent<PersonScript>();
 
         //Get the local version of the positions
         Vector3 localTar = worldMover.curContinent.transform.InverseTransformPoint(target.transform.position);
         Vector3 localPlayer = worldMover.curContinent.transform.InverseTransformPoint(connectionManager.currentPlayer.transform.position);
 
-        //Add local version of the pointts to a list
+        //Add local version of the points to a list and a reference on the relevant person
         List<Vector3> localPoints = new List<Vector3>() { localTar, localPlayer };
         worldMover.continentsMain.GetComponent<ContinentManager>().AddLine(localPoints);
+        person.AddLine(localPoints);
     }
 
     public void DrawLine(List<Vector3> points, Transform parent)
@@ -28,8 +32,11 @@ public class LineDraw : MonoBehaviour
         //First, offset by our relative position and add to a new list
         List<Vector3> pointsOffset = new List<Vector3>() { parent.TransformPoint(points[0]), parent.TransformPoint(points[1]) };
 
-        VectorLine newLine = new VectorLine("Line", pointsOffset, 1f);
+        //Name the line with an ID number so we can find it later
+        id++;
+        VectorLine newLine = new VectorLine("Line" + id, pointsOffset, 1.6f);
 
+        newLine.color = peopleManager.connectionColor;
         newLine.Draw3D();
         newLine.drawTransform = parent;
         newLine.rectTransform.SetParent(parent);

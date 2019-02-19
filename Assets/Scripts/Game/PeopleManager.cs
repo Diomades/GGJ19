@@ -21,8 +21,8 @@ public class PeopleManager : MonoBehaviour
     public Sprite loverSprite;
     public Color loverColor;
 
-    public Color lineColor; //Not used right now
-    public Color flashColor; //Not used right now
+    public Color lineColor;
+    public Color connectionColor;
 
     public GameObject person;
     public Collider2D worldMapBounds;
@@ -35,7 +35,7 @@ public class PeopleManager : MonoBehaviour
     public GameObject player2;
     public bool player1Active;
     private int _peopleID = 0;
-    public List<GameObject> people = new List<GameObject>();
+    public List<GameObject> people = new List<GameObject>(); //A list of all the people stored on the main map
 
     public void StartGenerate(GameObject mapRef)
     {
@@ -77,7 +77,7 @@ public class PeopleManager : MonoBehaviour
         }
 
         //Instantiate the person!
-        thisScript.InstantiatePerson(originalPlayer.transform.position, type, lineColor, flashColor);
+        thisScript.InstantiatePerson(originalPlayer.transform.position, type, lineColor, connectionColor, updateRate);
 
         if (type != PersonType.Player)
         {
@@ -91,21 +91,28 @@ public class PeopleManager : MonoBehaviour
         }
     }
 
-    public void UpdatePeople()
+    //Checks if any people need to be removed, removes them and tells WorldMover to update the continents appropriately
+    public void CheckKillPeople()
     {
+        bool updateRequired = false;
+
         for(int i = 0; i < people.Count; i++)
         {
             PersonScript person = people[i].GetComponent<PersonScript>();
-            person.UpdateStrength(updateRate); //Update this persons strength
-
             if (person.queueKill)
             {
-                //Erase the line, remove this person from the people list, and destroy them
-                lineDraw.EraseLine(person.lineRef);
+                _worldMapMain.GetComponent<ContinentManager>().RemoveLine(person.lineRef);
                 people.RemoveAt(i);
-                Destroy(person.transform.gameObject);
-                i--; //Go back one so we don't skip the next object
+                Destroy(person.gameObject);
+                i--; //Go back one so we don't break the loop
+                // = true; //Make sure we update the world map
             }
+        }
+
+        //Tell the maps to update if necessary
+        if (updateRequired)
+        {
+            worldMover.UpdateContinents();
         }
     }
 

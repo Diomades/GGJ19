@@ -29,13 +29,13 @@ public class ConnectionManager : MonoBehaviour
             if (playerSelected)
             {
                 //Check that this person hasn't been linked to already
-                PersonScript thisPerson = clicked.GetComponent<PersonScript>();
+                PersonScript thisPerson = worldMover.continentsMain.transform.Find(clicked.name).GetComponent<PersonScript>();
                 if (!PersonIsSelected(clicked.name))
                 {
                     //Add the person to the list
                     linkedPeople.Add(clicked.name);
 
-                    //Make a connection for this person                
+                    //Make or refresh the connection for this person by telling the Main version of it
                     thisPerson.MakeRefreshConnection();
 
                     //Increase the number of our links. If they are more than the required to run the Peak event, run it.

@@ -63,14 +63,15 @@ public class WorldMover : MonoBehaviour
     //We only do this if absolutely necessary
     public void UpdateContinents()
     {
+        //Before we do anything, check if any people need to be destroyed
+        peopleManager.CheckKillPeople();
+
         //Whenever anything about the maps change, we delete these copies and instantiate new versions in their place
         Vector3 cont1Pos = _continents1.transform.position;
         Vector3 cont2Pos = _continents2.transform.position;
         Vector3 contForwardPos = _continentsForward.transform.position;
 
-        //Destroy the old versions, starting with lines first
-        //lineDraw.EraseLines(_continents1.GetComponent<ContinentManager>().lines);
-        //lineDraw.EraseLines(_continents2.GetComponent<ContinentManager>().lines);
+        //Destroy the old versions
         Destroy(_continents1);
         Destroy(_continents2);
         Destroy(_continentsForward);
@@ -200,22 +201,19 @@ public class WorldMover : MonoBehaviour
                 if (connectionManager.playerSelected)
                 {
                     lineDraw.DrawLineToMousePointer(); //Update the mouse pointer line
-                }                
+                }
             }
-        }
-    }
 
-    //Update the lines?
-    private void LateUpdate()
-    {
-        //lineDraw.UpdateLines();
+            //Try updating continents every frame
+            UpdateContinents();
+        }
     }
 
     private void SetUpContinents()
     {
         //Store information about the main continent before we do anything
         ContinentManager contMan = continentsMain.GetComponent<ContinentManager>();
-        contMan.InstantiateMainContinent(connectionManager, gameManager, lineDraw, continentsMain.transform.Find("Player").gameObject);
+        contMan.InstantiateMainContinent(connectionManager, gameManager, lineDraw, continentsMain.transform.Find("Player").gameObject, peopleManager.updateRate);
 
         //Store information about the respawn details for the continents
         BoxCollider2D curCollider = continentsMain.transform.GetComponent<BoxCollider2D>(); //Get the box collider

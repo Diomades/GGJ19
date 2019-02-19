@@ -11,14 +11,17 @@ public class ContinentManager : MonoBehaviour
     public GameObject player;
 
     public List<List<Vector3>> lines = new List<List<Vector3>>(); //A list of lists of coordinates
-    public List<VectorLine> vectorLines = new List<VectorLine>();
+    //public List<GameObject> people = new List<GameObject>();
 
-    public void InstantiateMainContinent(ConnectionManager conMan, GameManager gameMan, LineDraw lineMan, GameObject man)
+    private float _updateRate;
+
+    public void InstantiateMainContinent(ConnectionManager conMan, GameManager gameMan, LineDraw lineMan, GameObject man, float rate)
     {
         connectionManager = conMan;
         gameManager = gameMan;
         lineDraw = lineMan;
         player = man;
+        _updateRate = rate;
     }
 
     public void InstantiateNewContinent(List<List<Vector3>> mainLines)
@@ -36,10 +39,43 @@ public class ContinentManager : MonoBehaviour
         lines.Add(locations);
     }
 
+    public void RemoveLine(List<Vector3> line)
+    {
+        for(int i = 0; i < lines.Count; i++)
+        {
+            //If the points of this line match our reference line, remove it
+            if(lines[i] == line)
+            {
+                lines.RemoveAt(i);
+                return;
+            }
+        }
+        Debug.Log("FAILED TO FIND LINE");
+    }
+
     public void PingContinent()
     {
         Debug.Log("Confirming things are working on " + this.name + ". Connection Manager: " + connectionManager + " Game Manager: " + gameManager + " Player: " + player);
     }
+
+    /*public void UpdatePeople()
+    {
+        for (int i = 0; i < people.Count; i++)
+        {
+            PersonScript person = people[i].GetComponent<PersonScript>();
+            person.UpdateStrength(_updateRate); //Update this persons strength
+
+            if (person.queueKill)
+            {
+                //Erase the line, remove this person from the people list, and destroy them
+                RemoveLine(person.lineRef);
+                lineDraw.EraseLine(person.lineRef);
+                people.RemoveAt(i);
+                Destroy(person.transform.gameObject);
+                i--; //Go back one so we don't skip the next object
+            }
+        }
+    }*/
 
     //Update all of the spawned people at a certain rate
     /*private void Update()

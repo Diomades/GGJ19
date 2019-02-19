@@ -875,8 +875,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 49}
-  m_SizeDelta: {x: 1046.6, y: 86.70001}
+  m_AnchoredPosition: {x: 0, y: 39.7}
+  m_SizeDelta: {x: 1046.6, y: 68.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &601526776
 MonoBehaviour:
@@ -1195,8 +1195,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 942919395}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.2, y: -0.4, z: -3.8203125}
-  m_LocalScale: {x: 1.311, y: 1.311, z: 1.311}
+  m_LocalPosition: {x: 1.2, y: -1.9, z: -3.8203125}
+  m_LocalScale: {x: 1.4132581, y: 1.4132581, z: 1.4132581}
   m_Children: []
   m_Father: {fileID: 503792854}
   m_RootOrder: 0
@@ -1692,6 +1692,26 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1774620282559687541, guid: 58ba5344caeb82e46a7f81c0b92ac383,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1774620282559687541, guid: 58ba5344caeb82e46a7f81c0b92ac383,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1774620282559687541, guid: 58ba5344caeb82e46a7f81c0b92ac383,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 2.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1774620282559687541, guid: 58ba5344caeb82e46a7f81c0b92ac383,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58ba5344caeb82e46a7f81c0b92ac383, type: 3}
 --- !u!1 &1182876318
@@ -1833,8 +1853,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.5, y: 0.5}
-  m_SizeDelta: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 1.2000122, y: -0.25}
+  m_SizeDelta: {x: 2.4, y: 0.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1182876325
 MonoBehaviour:
@@ -2486,8 +2506,8 @@ MonoBehaviour:
   friendColor: {r: 1, g: 0.437199, b: 0, a: 1}
   loverSprite: {fileID: 21300000, guid: 7e8bffdb7877ef848baa16f1a9cdf841, type: 3}
   loverColor: {r: 1, g: 0, b: 0.5221448, a: 1}
-  lineColor: {r: 0.20784314, g: 0.11372549, b: 0.35686275, a: 1}
-  flashColor: {r: 0.754717, g: 0.3809185, b: 0.6059014, a: 1}
+  lineColor: {r: 0.1764706, g: 0.0627451, b: 0.25490198, a: 1}
+  connectionColor: {r: 0.41509432, g: 0.03720184, b: 0.26838896, a: 1}
   person: {fileID: 4055714621564613311, guid: 57480f920e967854bb7df3b1953dcf90, type: 3}
   worldMapBounds: {fileID: 573728877}
   worldMapCollider: {fileID: 5122961051293904644}
@@ -3143,7 +3163,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6187086394598495437}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.7, y: 0, z: 0}
+  m_LocalPosition: {x: -2.4, y: -1.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 573728876}
