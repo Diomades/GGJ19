@@ -308,7 +308,7 @@ PrefabInstance:
     - target: {fileID: 341384744084879811, guid: 93a7ce912f02ee747bec7bbddf732f21,
         type: 3}
       propertyPath: skipOpening
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93a7ce912f02ee747bec7bbddf732f21, type: 3}
@@ -406,7 +406,6 @@ GameObject:
   - component: {fileID: 418502805}
   - component: {fileID: 418502804}
   - component: {fileID: 418502803}
-  - component: {fileID: 418502806}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -478,102 +477,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &418502806
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 418502802}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 5a572b043cd745e49b9f8b37770ab120, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 0.399
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &449584663
 GameObject:
   m_ObjectHideFlags: 0
@@ -2450,7 +2353,6 @@ GameObject:
   - component: {fileID: 1689417831}
   - component: {fileID: 1689417832}
   - component: {fileID: 1689417834}
-  - component: {fileID: 1689417835}
   m_Layer: 0
   m_Name: GameplayScripts
   m_TagString: Untagged
@@ -2498,7 +2400,7 @@ MonoBehaviour:
   worldMover: {fileID: 1689417830}
   connectionManager: {fileID: 1689417832}
   lineDraw: {fileID: 1689417834}
-  gameEvents: {fileID: 1689417835}
+  gameEvents: {fileID: 0}
   updateRate: 800
   playerSprite: {fileID: 21300000, guid: 4b3658198ef7cee4f884d2046a38dfa2, type: 3}
   playerColor: {r: 1, g: 0, b: 0, a: 1}
@@ -2530,11 +2432,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   peopleManager: {fileID: 1689417831}
   worldMover: {fileID: 1689417830}
-  gameEvents: {fileID: 1689417835}
+  gameEvents: {fileID: 1864306120}
   lineDraw: {fileID: 1689417834}
   playerSelected: 0
   currentPlayer: {fileID: 0}
   totalLinks: 0
+  totalLovers: 0
 --- !u!4 &1689417833
 Transform:
   m_ObjectHideFlags: 0
@@ -2564,78 +2467,6 @@ MonoBehaviour:
   connectionManager: {fileID: 1689417832}
   peopleManager: {fileID: 1689417831}
   worldMover: {fileID: 1689417830}
---- !u!114 &1689417835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1689417828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 907af66fda0690a4da3150a559324f50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sideBar: {fileID: 601526776}
-  atmosHigh: {fileID: 8300000, guid: 69c57e20bb800aa45b3a972cf6bd9067, type: 3}
-  bassLaser: {fileID: 8300000, guid: c1c8632b2a204d24696fb465282f7700, type: 3}
-  bassSpoopy: {fileID: 8300000, guid: 63a9d5508a4ab0b4b90fd629e29ea30d, type: 3}
-  melodyBells: {fileID: 8300000, guid: 5e4adce95687aff4c887198fa383a111, type: 3}
-  melodyChimes: {fileID: 8300000, guid: e01900be27d53fc49acffe7d214e0ec4, type: 3}
-  melodyPiano: {fileID: 8300000, guid: 0b7765b8fcb4350448c21d7c1ff56b60, type: 3}
-  connectionEvent: 'Back when I was a kid, before the internet was in most households,
-    your choice of friends was limited.
-
-    The healthiest friendships I started developing into my teens was when we got
-    an internet connection, and I could interact with like-minded kids my age.
-
-    They were a better influence on me than the local kids with whom I usually shared
-    so little in common.
-
-    Home was where I could be with friends.
-
-
-    <b>Reconnect to others often to maintain relationships.</b>'
-  loveEvent: 'The first time I fell in love with somebody overseas, the world felt
-    like it got bigger and smaller at the same time.
-
-    The fact I could genuinely love somebody I''d never met in person was baffling
-    and magical.
-
-    I have never felt so close and yet so far away from somebody. The distance felt
-    even more immense because I cared for them so much.
-
-    Love doesn''t care for kilometers. Home was always with you.'
-  friendshipLossEvent: 'I''d say losing a friend is never easy, but that''s not always
-    true, is it?
-
-    Sometimes it''s necessary. They aren''t always healthy relationships, or people
-    require more maintenance than we can reasonably give.
-
-    Other times you just grow apart.
-
-    The best relationships I''ve found are the ones that don''t need maintenance.
-    You can always rely on them.'
-  loveLossEvent: 'Losing love never feels good.
-
-    I''ve been invested in every relationship I''ve ever had. I''ve always been invested
-    in my partner.
-
-    Sometimes, much like friendships, it ending is for the best. Love comes with rose
-    tinted glasses that can make you see unhealthy relationships for healthy ones.
-
-    But, often, life is just cruel and takes away the thing you care about most.'
-  peakEvent: 'There comes a point where you can only maintain so many friendships.
-
-    Unless you''re lucky and have a lot of those low-maintenance relationships where
-    your care is never in question, sometimes it''s better to pick and choose your
-    connections.
-
-    Isn''t it better to have a small number of strong relationships, than a dozen
-    weak ones?
-
-    Friends aren''t a commodity.'
-  peakReq: 16
 --- !u!114 &1786879062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2649,9 +2480,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f625ceaaf2aa4047adf91218514ce5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skipOpening: 1
+  skipOpening: 0
   gameLaunch: {fileID: 1864306118}
   screenManager: {fileID: 1864306117}
+  gameEvents: {fileID: 1864306120}
   fadeInOut: {fileID: 1864306116}
   gamePlaying: 0
 --- !u!1 &1795305626
@@ -2746,6 +2578,7 @@ GameObject:
   - component: {fileID: 1864306118}
   - component: {fileID: 1864306116}
   - component: {fileID: 1864306117}
+  - component: {fileID: 1864306120}
   m_Layer: 0
   m_Name: MenuScripts
   m_TagString: Untagged
@@ -2818,6 +2651,58 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1864306120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1864306115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 907af66fda0690a4da3150a559324f50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicVolume: 1
+  fadeTime: 3
+  sideBar: {fileID: 601526776}
+  musicPhase1a: {fileID: 0}
+  musicPhase1b: {fileID: 0}
+  musicPhase2: {fileID: 0}
+  musicPhase3: {fileID: 0}
+  musicPhase4: {fileID: 0}
+  musicPhase5: {fileID: 0}
+  atmosHigh: {fileID: 8300000, guid: 69c57e20bb800aa45b3a972cf6bd9067, type: 3}
+  bassLaser: {fileID: 8300000, guid: c1c8632b2a204d24696fb465282f7700, type: 3}
+  bassSpoopy: {fileID: 8300000, guid: 63a9d5508a4ab0b4b90fd629e29ea30d, type: 3}
+  melodyBells: {fileID: 8300000, guid: 5e4adce95687aff4c887198fa383a111, type: 3}
+  melodyChimes: {fileID: 8300000, guid: e01900be27d53fc49acffe7d214e0ec4, type: 3}
+  melodyPiano: {fileID: 8300000, guid: 0b7765b8fcb4350448c21d7c1ff56b60, type: 3}
+  connectionEvent: '<b>Reconnect to others often to maintain relationships.</b>
+
+
+    Some of my healthiest and most supportive friendships are with people I''ve never
+    met in person.'
+  loveEvent: '<b>You can have multiple lovers if you so choose.</b>
+
+
+    Love doesn''t care about distance. Truly knowing and loving somebody doesn''t
+    require you to be able to touch them.'
+  friendshipLossEvent: 'Not all friendships are made to last, and that''s okay.
+
+
+    <b>Make sure to reconnect to others often.</b>'
+  loveLossEvent: 'Losing somebody you love never feels good, no matter the specifics
+    of the circumstances.
+
+
+    <b>Make sure to reconnect to others often.</b>'
+  peakEvent: 'Dunbar''s number still applies to online friendships. There''ll always
+    be a limit to how many friendships you can comfortably sustain.
+
+
+    <b>Make sure to reconnect to others often.</b>'
+  peakReq: 10
 --- !u!1 &1866146528
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     public GameLaunch gameLaunch;
     public ScreenManager screenManager;
+    public GameEvents gameEvents;
     public FadeInOut fadeInOut;
 
     public bool gamePlaying = false;
@@ -22,12 +23,18 @@ public class GameManager : MonoBehaviour
             //Hide all the other menu screens to skip straight to gameplay
             screenManager.ChangeCurrentScreen(GameScreens.GameScreen);
 
+            //Start the game music
+            gameEvents.RampAudio(MusicEvent.Base);
+
             //Start moving everything
             gameLaunch.worldMover.StartMoving();
             gamePlaying = true;
         }
         else
         {
+            //Start the game music
+            gameEvents.RampAudio(MusicEvent.Base);
+
             //Start everything
             screenManager.StartScreenManager(this);
             gameLaunch.BeginSequence(this);

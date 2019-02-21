@@ -13,6 +13,7 @@ public class ConnectionManager : MonoBehaviour
     public GameObject currentPlayer; //Gets updated by PeopleManager and WorldMover with the currently selected player
 
     public int totalLinks = 0;
+    public int totalLovers = 0;
 
     private List<string> linkedPeople = new List<string>(); //A list of all the names of the people we've linked to
 
@@ -44,14 +45,31 @@ public class ConnectionManager : MonoBehaviour
                     {
                         gameEvents.CheckRunEvent(GameEvent.Peak);
                     }
-                    else if (totalLinks == 1) //If there's only 1 link, see if it's our first
+                    else if (totalLinks == 1) //If there's only 1 link, see if it's our first and add to the music
                     {
                         gameEvents.CheckRunEvent(GameEvent.Connection);
                     }
 
+                    //The music queue If statements
+                    if (totalLinks <= 4)
+                    {
+                        gameEvents.RampAudio(MusicEvent.Connection1);
+                    }
+                    else if (totalLinks <= 9)
+                    {
+                        gameEvents.RampAudio(MusicEvent.Connection5);
+                    }
+                    else if (totalLinks >= 10)
+                    {
+                        gameEvents.RampAudio(MusicEvent.Connection10);
+                    }
+
+                    //Specific events for lover connections
                     if (thisPerson.thisPersonType == PersonType.Lover)
                     {
+                        totalLovers++;
                         gameEvents.CheckRunEvent(GameEvent.Love);
+                        gameEvents.RampAudio(MusicEvent.LoveConnection);
                     }
 
                     //Disable the line renderer going to the mouse pointer
@@ -75,6 +93,17 @@ public class ConnectionManager : MonoBehaviour
                     playerSelected = false;
                 }
             }
+        }
+    }
+
+    //For when we have a lover lost
+    public void RemoveLover()
+    {
+        totalLovers--;
+        if(totalLovers == 0)
+        {
+            gameEvents.CheckRunEvent(GameEvent.LoveLoss);
+            gameEvents.RampAudio(MusicEvent.LoveBreak);
         }
     }
 

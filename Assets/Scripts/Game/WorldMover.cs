@@ -202,10 +202,10 @@ public class WorldMover : MonoBehaviour
                 {
                     lineDraw.DrawLineToMousePointer(); //Update the mouse pointer line
                 }
-            }
 
-            //Try updating continents every frame
-            UpdateContinents();
+                //Try updating continents every frame
+                UpdateContinents();
+            }
         }
     }
 

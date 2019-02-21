@@ -101,6 +101,11 @@ public class PeopleManager : MonoBehaviour
             PersonScript person = people[i].GetComponent<PersonScript>();
             if (person.queueKill)
             {
+                //This triggers any events related to losing a partner
+                if(person.thisPersonType == PersonType.Lover)
+                {
+                    connectionManager.RemoveLover();
+                }
                 _worldMapMain.GetComponent<ContinentManager>().RemoveLine(person.lineRef);
                 people.RemoveAt(i);
                 Destroy(person.gameObject);
