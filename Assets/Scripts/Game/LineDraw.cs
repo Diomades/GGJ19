@@ -34,7 +34,7 @@ public class LineDraw : MonoBehaviour
 
         //Name the line with an ID number so we can find it later
         id++;
-        VectorLine newLine = new VectorLine("Line" + id, pointsOffset, 1.6f);
+        VectorLine newLine = new VectorLine("Line" + id, pointsOffset, 2.6f);
 
         newLine.color = peopleManager.connectionColor;
         newLine.Draw3D();
