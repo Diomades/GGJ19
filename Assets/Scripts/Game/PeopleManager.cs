@@ -106,11 +106,17 @@ public class PeopleManager : MonoBehaviour
                 {
                     connectionManager.RemoveLover();
                 }
-                _worldMapMain.GetComponent<ContinentManager>().RemoveLine(person.lineRef);
+
+                //Remove the line if there is one
+                if(person.lineRef.Count != 0)
+                {
+                    _worldMapMain.GetComponent<ContinentManager>().RemoveLine(person.lineRef);
+                }        
+                
+                //Remove the person from the list and destroy them
                 people.RemoveAt(i);
                 Destroy(person.gameObject);
                 i--; //Go back one so we don't break the loop
-                // = true; //Make sure we update the world map
             }
         }
 

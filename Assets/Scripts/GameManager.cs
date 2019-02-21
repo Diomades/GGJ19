@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -39,6 +38,15 @@ public class GameManager : MonoBehaviour
             screenManager.StartScreenManager(this);
             gameLaunch.BeginSequence(this);
         }        
+    }
+
+    private void Update()
+    {
+        //Super easy game reset
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
     //The StartGame button activates this function
